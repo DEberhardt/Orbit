@@ -53,5 +53,25 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Install
+      run: .\install.ps1
+    - name: Build
+      run: Write-Output "TBC build script creating version"
+    - name: Prepare
+      run: Write-Output "TBC script to checking manifest, signing doc and other steps"
+      #run: .\build.ps1
+    - name: Document
+      run: Write-Output "TBC create/update platyps documentation (and retain)"
+      #run: .\build-docs.ps1
+    - name: Test
+      run: Write-Output "TBC Run Pester Tests"
+      #run: .\Test.ps1
+    - name: Release
+      run: Write-Output "TBC Create Github release"
+      #run: .\Release.ps1
+    - name: Deploy
+      run: |
+        #$version = $env:GITHUB_REF.TrimStart("refs/tags/v")
+        #./deploy.ps1 -ModuleVersion $version -Repository PSGallery -RepositoryAPIKey ${{ secrets.PSGALLERY_KEY }}
     - name: Finish
       run: Write-Output "Done"
