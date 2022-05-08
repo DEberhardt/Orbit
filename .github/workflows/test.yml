@@ -1,0 +1,57 @@
+﻿name: test
+on: push
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Show Modules
+      run: |
+        $Modules = Get-Module -ListAvailable
+        $Modules
+        Import-Module PowerShellGet
+        Get-Module
+  test-ubuntu:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Show Modules
+      run: |
+        $Modules = Get-Module -ListAvailable
+        $Modules
+        Import-Module PowerShellGet
+        Get-Module
+  test-macos:
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Show Modules
+      run: |
+        $Modules = Get-Module -ListAvailable
+        $Modules
+        Import-Module PowerShellGet
+        Get-Module
+  test-final:
+    runs-on: ubuntu-latest
+    needs: [test-ubuntu, test-windows, test-macos]
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Finish
+      run: Write-Output "Done"
