@@ -47,7 +47,6 @@ The Session CmdLets come from TeamsFunctions but they aren't yet fit for purpose
 - [ ] `GetAppIdFromApplicationType`
 - [ ] `GetApplicationTypeFromAppId`
 - [ ] `Get-TeamAndChannel`
-- [ ] `Get-InterpretedVoiceConfigType`
 - [ ] `Assert-TeamsAudioFile`
 - [ ] `Merge-TeamsAutoAttendantArtefact`
 - [ ] `Use-MicrosoftTeamsConnection`
