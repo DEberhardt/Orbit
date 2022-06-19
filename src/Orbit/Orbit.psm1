@@ -5,6 +5,7 @@
 #requires -Version 5
 #Requires -Modules @{ ModuleName="MicrosoftTeams"; ModuleVersion="4.2.0" }
 
+
 #Get public and private function definition files.
 $Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -Recurse -ErrorAction SilentlyContinue )

@@ -3,6 +3,9 @@
 # remove the comment when using classes
 
 #requires -Version 5
+#Requires -Modules @{ ModuleName="Microsoft.Graph.Groups"; ModuleVersion="1.9.6" }
+Import-Module Microsoft.Graph.Groups
+
 
 #Get public and private function definition files.
 $Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse -ErrorAction SilentlyContinue )
