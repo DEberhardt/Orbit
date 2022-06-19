@@ -29,7 +29,7 @@ $Name = 'First Last'
     CompanyName       = ''
 
     # Copyright statement for this module
-    Copyright         = "(c) 2018 $Name. All rights reserved."
+    Copyright         = "(c) 2022 $Name. All rights reserved."
 
     # Description of the functionality provided by this module
     Description       = "$TemplatePowerShellModule Description"
@@ -122,4 +122,3 @@ $Name = 'First Last'
     # DefaultCommandPrefix = ''
 
 }
-
