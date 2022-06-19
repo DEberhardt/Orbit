@@ -1,4 +1,4 @@
-# using module .\Class\Orbit.AzureAd.Class1.psm1
+# using module .\Class\Orbit.Groups.Class1.psm1
 # Above needs to remain the first line to import Classes
 # remove the comment when using classes
 

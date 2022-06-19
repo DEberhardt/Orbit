@@ -43,7 +43,7 @@ This Module will install child modules analog to Microsoft.Graph. They are publi
 ```powershell
 # Currently available modules (extensible)
 Import-Module Orbit
-# This will automatically load Orbit.AzureAd, Orbit.Graph, Orbit.Teams & Orbit.Tools
+# This will automatically load Orbit.Users, Orbit.Groups, Orbit.Teams & Orbit.Tools
 ```
 
 ## Notes

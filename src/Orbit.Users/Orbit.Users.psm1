@@ -1,4 +1,4 @@
-# using module .\Class\Orbit.Graph.Class1.psm1
+# using module .\Class\Orbit.Users.Class1.psm1
 # Above needs to remain the first line to import Classes
 # remove the comment when using classes
 
