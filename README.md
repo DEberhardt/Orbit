@@ -2,7 +2,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/7yb9er834qod0xvw?svg=true)](https://ci.appveyor.com/project/Name/templatepowershellmodule)
 
-This is a work-in-progress built on the shoulders of [TeamsFunctions](https://github.com/DEberhardt/TeamsFunctions)
+This is a work-in-progress built on the shoulders of and replacing [TeamsFunctions](https://github.com/DEberhardt/TeamsFunctions)
 
 ## The solution must reduce the administrative overhead
 
@@ -12,11 +12,11 @@ Contributors & contributions are welcome
 
 ## Synopsis
 
-Orbit is a PowerShell Module that aims to simplify administrative overhead when working with Microsoft 365 tools, especially licensing and provisioning for Microsoft Teams Voice
+Orbit is a PowerShell Module that aims to simplify administrative overhead when working with Microsoft 365 tools.
 
 ## Description
 
-When working with AzureAd, Graph or MicrosoftTeams individually, limitations arise that require use of information contained in other spheres of 365. This module aims to connect these spheres and allow a more holistic approach for Teams Administrators that need to license users or gain information from the Azure Active Directory.
+When working with AzureAd, Graph or MicrosoftTeams individually, limitations arise that require use of information contained in other spheres of 365. This module aims to connect these spheres and allow a more holistic approach for Teams Administrators that need to license users or gain information from the wider M365 space, be that Azure Active Directory, Exchange, etc.
 
 ## Using Orbit
 
@@ -43,10 +43,7 @@ This Module will install child modules analog to Microsoft.Graph. They are publi
 ```powershell
 # Currently available modules (extensible)
 Import-Module Orbit
-Import-Module Orbit.AzureAd
-Import-Module Orbit.Graph
-Import-Module Orbit.Teams
-Import-Module Orbit.Tools
+# This will automatically load Orbit.AzureAd, Orbit.Graph, Orbit.Teams & Orbit.Tools
 ```
 
 ## Notes
@@ -55,4 +52,5 @@ Import-Module Orbit.Tools
    Name: Orbit
    Created by: David Eberhardt
    Created Date: 30-JAN 2022
+   Planned Release: 01-JUL-2022
 ```

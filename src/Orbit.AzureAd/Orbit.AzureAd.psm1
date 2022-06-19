@@ -1,8 +1,8 @@
-# using module .\TemplatePowerShellModule\Class\TemplatePowerShellModule.Class1.psm1
+# using module .\Class\Orbit.AzureAd.Class1.psm1
 # Above needs to remain the first line to import Classes
 # remove the comment when using classes
 
-#requires -Version 2
+#requires -Version 5
 #Get public and private function definition files.
 $Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -Recurse -ErrorAction SilentlyContinue )
