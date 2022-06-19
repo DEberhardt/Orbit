@@ -10,6 +10,28 @@
 $Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -Recurse -ErrorAction SilentlyContinue )
 
+<#
+  Orbit - Module supplementing Microsoft.Graph and MicrosoftTeams
+  Supporting Teams Administration, Voice Configuration for Tenant and Users
+  User Configuration for Voice, Creation and connection of Resource Accounts,
+  Licensing of Objects for Calling Plans & Direct Routing,
+  Creation and Management of Call Queues and Auto Attendants
+
+  by David Eberhardt
+  david@davideberhardt.at
+  @MightyOrmus
+  www.davideberhardt.at
+  https://github.com/DEberhardt
+  https://davideberhardt.wordpress.com/
+
+  Any and all technical advice, scripts, and documentation are provided as is with no guarantee.
+  Always review any code and steps before applying to a production system to understand their full impact.
+
+.LINK
+  https://github.com/DEberhardt/Orbit/tree/master/docs
+
+#>
+
 #region Functions
 #Dot source the files
 Foreach ($Function in @($Public + $Private)) {
@@ -48,7 +70,7 @@ $Aliases = Foreach ($Function in @($Public)) {
     }
   }
 }
-Write-Verbose -Message "Aliases to Export - List: $($Aliases -join ",")"
+Write-Verbose -Message "Aliases to Export - List: $($Aliases -join ',')"
 Write-Verbose -Message "Aliases to Export - Count: $($Aliases.Count)"
 
 # Manual definitions
