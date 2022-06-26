@@ -35,7 +35,7 @@ $RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
 # Setting Build Helpers Build Environment ENV:BH*
 Write-Verbose -Message 'General: Module Version' -Verbose
 Set-BuildEnvironment -Path $RootManifestTest.ModuleBase
-Get-Item ENV:BH* | Select-Object Key,Value
+Get-Item ENV:BH*
 
 # Creating new version Number (determined from found Version)
 [System.Version]$version = $RootManifestTest.Version
@@ -57,6 +57,10 @@ else {
 }
 Write-Output "New Version: $newVersion"
 
+Write-Verbose -Message "General: Updating Orbit.psm1 to reflect all nested Modules' Version" -Verbose
+$content = Get-Content -Path "$($RootManifestTest.ModuleBase)\Orbit.psm1"
+$newContent = $content -replace "'; RequiredVersion = '*'", "'; RequiredVersion = '$newVersion'"
+$newContent | Set-Content -Path "$($RootManifestTest.ModuleBase)\Orbit.psm1"
 
 # Updating all Modules
 Write-Verbose -Message 'Build: Loop through all Modules' -Verbose

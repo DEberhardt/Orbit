@@ -6,7 +6,7 @@ on:
 
 jobs:
   Integration:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     defaults:
       run:
         shell: pwsh
