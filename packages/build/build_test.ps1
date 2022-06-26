@@ -33,7 +33,7 @@ $RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
 $RootManifestTest | Format-List *
 
 # Setting Build Helpers Build Environment ENV:BH*
-Set-BuildEnvironment -Path $RootManifestTest.Path
+Set-BuildEnvironment -Path $RootManifestTest.ModuleBase
 
 # Creating new version Number (determined from found Version)
 [System.Version]$version = $RootManifestTest.Version
