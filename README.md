@@ -1,7 +1,5 @@
 # Orbit
 
-[![Build status](https://ci.appveyor.com/api/projects/status/7yb9er834qod0xvw?svg=true)](https://ci.appveyor.com/project/Name/templatepowershellmodule)
-
 This is a work-in-progress built on the shoulders of and replacing [TeamsFunctions](https://github.com/DEberhardt/TeamsFunctions)
 
 ## The solution must reduce the administrative overhead
@@ -9,6 +7,17 @@ This is a work-in-progress built on the shoulders of and replacing [TeamsFunctio
 The Microsoft 365 ecosystem is ever expanding. Orbiting it, are tools built on top of these cloud services. Focused on Azure Active Directory and Microsoft Teams, but extensible by design.
 
 Contributors & contributions are welcome
+
+## Status
+
+|           |                                                                                                                                                                                                                                                                                                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| General     |  [![Documentation - GitHub](https://img.shields.io/badge/Documentation-Orbit-blue.svg)](https://github.com/DEberhardt/Orbit/tree/master/docs) [![PowerShell Gallery - Orbit](https://img.shields.io/badge/PowerShell%20Gallery-Orbit-blue.svg)](https://www.powershellgallery.com/packages/Orbit/) |
+| Release     | [![Release](https://img.shields.io/github/v/release/DEberhardt/Orbit?include_prereleases&sort=semver)](.\readme.md) [![BuildWorkflow](https://img.shields.io/github/workflow/status/DEberhardt/Orbit/Publish)](.\readme.md) |
+| Build     |  [![Build](https://img.shields.io/badge/Build-unknown-orange.svg)](.\readme.md) [![Issues](https://img.shields.io/github/issues/DEberhardt/Orbit)](https://github.com/DEberhardt/Orbit/issues) |
+| Other     | [![License](https://img.shields.io/github/license/DEberhardt/Orbit)](https://github.com/DEberhardt/Orbit/blob/master/LICENSE) [![Platform](https://img.shields.io/powershellgallery/p/Orbit)](.\readme.md) [![Downloads](https://img.shields.io/powershellgallery/dt/Orbit)](.\readme.md) |
+| Functions | ![Public](https://img.shields.io/badge/Public-0-blue.svg) ![Private](https://img.shields.io/badge/Private-0-grey.svg) ![Live](https://img.shields.io/badge/Live-0-blue.svg) ![RC](https://img.shields.io/badge/RC-0-green.svg) ![BETA](https://img.shields.io/badge/BETA-3-yellow.svg) ![ALPHA](https://img.shields.io/badge/ALPHA-4-orange.svg)                                                                                                                                                                           |
+| Pester    | ![Result](https://img.shields.io/badge/Result-pass-green.svg) ![Passed](https://img.shields.io/badge/Passed-0-blue.svg) ![Failed](https://img.shields.io/badge/Failed-0-red.svg) ![Skipped](https://img.shields.io/badge/Skipped-33-yellow.svg) ![NotRun](https://img.shields.io/badge/NotRun-44-grey.svg) ![CodeCoverage](https://img.shields.io/badge/CodeCoverage-0%25-red.svg)                                                                                                                              |
 
 ## Synopsis
 

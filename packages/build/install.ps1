@@ -1,31 +1,49 @@
-[string[]]$PowerShellModules = @('Pester', 'posh-git', 'platyPS', 'InvokeBuild')
 [string[]]$PackageProviders = @('NuGet', 'PowerShellGet')
-#[string[]]$ChocolateyPackages = @('nodejs', 'calibre')
-#[string[]]$NodeModules = @('gitbook-cli', 'gitbook-summary')
-
-# Line break for readability in AppVeyor console
-Write-Host -Object ''
+[string[]]$PowerShellModules = @('Pester', 'posh-git', 'platyPS', 'InvokeBuild', 'BuildHelpers')
 
 # Install package providers for PowerShell Modules
 ForEach ($Provider in $PackageProviders) {
-    If (!(Get-PackageProvider $Provider -ErrorAction SilentlyContinue)) {
-        Install-PackageProvider $Provider -Force -ForceBootstrap -Scope CurrentUser
-    }
+  If (!(Get-PackageProvider $Provider -ErrorAction SilentlyContinue)) {
+    Install-PackageProvider $Provider -Force -ForceBootstrap -Scope CurrentUser
+  }
 }
 
 # Install the PowerShell Modules
 ForEach ($Module in $PowerShellModules) {
-    If (!(Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue)) {
-        Install-Module $Module -Scope CurrentUser -Force -Repository PSGallery
-    }
-    Import-Module $Module
+  If (!(Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue)) {
+    Install-Module $Module -Scope CurrentUser -Force -Repository PSGallery
+  }
+  Import-Module $Module
 }
 
-# Install Chocolatey
-#Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+#region Custom Functions
+function Get-FunctionStatus {
+  param (
+    [string[]]$PublicPath = '.\Public',
+    [string[]]$PrivatePath = '.\Private'
+  )
 
-# Install Chocolatey packages
-#ForEach ($Package in $ChocolateyPackages) {choco install $Package -y --no-progress}
+  # Simple Function to query function status by analysing the Content
+  # This searches for calls to "Set-FunctionStatus -Level <Level>"
 
-# Install Node packages
-#ForEach ($Module in $NodeModules) {npm install -g $Module}
+  $PublicFunctions = if ( [String]::IsNullOrEmpty($PublicPath)) { $null } else { Get-ChildItem -Filter *.ps1 -Path @($PublicPath) -Recurse }
+  $PrivateFunctions = if ( [String]::IsNullOrEmpty($PrivatePath) ) { $null } else { Get-ChildItem -Filter *.ps1 -Path @($PrivatePath) -Recurse }
+
+  $FunctionStatus = $null
+  $FunctionStatus = [PsCustomObject][ordered] @{
+    'Total'        = $PublicFunctions.Count + $PrivateFunctions.Count
+    'Public'       = $PublicFunctions.Count
+    'Private'      = $PrivateFunctions.Count
+    'PublicLive'   = $(($PublicFunctions | Get-Content -ErrorAction Ignore) -match '-Level Live').Count
+    'PublicRC'     = $(($PublicFunctions | Get-Content -ErrorAction Ignore) -match '-Level RC').Count
+    'PublicBeta'   = $(($PublicFunctions | Get-Content -ErrorAction Ignore) -match '-Level Beta').Count
+    'PublicAlpha'  = $(($PublicFunctions | Get-Content -ErrorAction Ignore) -match '-Level Alpha').Count
+    'PrivateLive'  = $(($PrivateFunctions | Get-Content -ErrorAction Ignore) -match '-Level Live').Count
+    'PrivateRC'    = $(($PrivateFunctions | Get-Content -ErrorAction Ignore) -match '-Level RC').Count
+    'PrivateBeta'  = $(($PrivateFunctions | Get-Content -ErrorAction Ignore) -match '-Level Beta').Count
+    'PrivateAlpha' = $(($PrivateFunctions | Get-Content -ErrorAction Ignore) -match '-Level Alpha').Count
+  }
+
+  return $FunctionStatus
+}
+#endregion
