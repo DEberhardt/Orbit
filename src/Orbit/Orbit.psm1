@@ -4,6 +4,11 @@
 
 #requires -Version 5
 #Requires -Modules @{ ModuleName="MicrosoftTeams"; ModuleVersion="4.2.0" }
+#Requires -Modules @{ ModuleName='Orbit.Authentication'; RequiredVersion = '0.0.0.0' }
+#Requires -Modules @{ ModuleName='Orbit.Groups'; RequiredVersion = '0.0.0.0' }
+#Requires -Modules @{ ModuleName='Orbit.Teams'; RequiredVersion = '0.0.0.0' }
+#Requires -Modules @{ ModuleName='Orbit.Tools'; RequiredVersion = '0.0.0.0' }
+#Requires -Modules @{ ModuleName='Orbit.Users'; RequiredVersion = '0.0.0.0' }
 
 
 #Get public and private function definition files.
