@@ -65,7 +65,7 @@ foreach ($Module in $OrbitModule) {
     $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
     # Setting Build Helpers Build Environment ENV:BH*
-    Set-BuildEnvironment -Path $ManifestTest.ModuleBase
+    Set-BuildEnvironment -Path $ManifestTest.ModuleBase -Force
 
     # Setting Build Helpers Build Environment ENV:BH*
     Set-BuildEnvironment -Path $ManifestPath
@@ -166,6 +166,7 @@ Set-ShieldsIoBadge -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Co
 
 #region Publish the new version back to Master on GitHub
 try {
+  #TODO Check Invoke-Git and replace the below?
   # Set up a path to the git.exe cmd, import posh-git to give us control over git, and then push changes to GitHub
   $env:Path += ";$env:ProgramFiles\Git\cmd"
   Import-Module posh-git -ErrorAction Stop
@@ -177,6 +178,8 @@ try {
   git push origin master
   git push --tags origin
   Write-Output "$Module PowerShell Module version $newVersion published to GitHub."
+
+  #TODO Call Publish-GitHubRelease from BuildHelpers
 }
 catch {
   # Sad panda; it broke
