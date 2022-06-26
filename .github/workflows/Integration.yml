@@ -1,11 +1,11 @@
-﻿name: test
+﻿name: Integration
 on:
   push:
     branches:
       - 'main'
 
 jobs:
-  Integrate:
+  Integration:
     runs-on: ubuntu-latest
     defaults:
       run:
