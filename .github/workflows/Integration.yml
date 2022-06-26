@@ -14,11 +14,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Install
-      run: .\packages\build\install.ps1
+      run: |
+        Write-Output "Installing"
+        .\packages\build\install.ps1
     - name: Build Test
-      run: .\packages\build\build_test.ps1
+      run: |
+        Write-Output "Testing Build Script"
+        .\packages\build\build_test.ps1
     - name: Build, Test, Lint & Publish
-      run: Write-Output "Skipped"
-      #run: .\packages\build\build_test.ps1
+      run: |
+        Write-Output "Building, Testing, Linting & Publishing Module"
+        #.\packages\build\build.ps1
     - name: Finish
       run: Write-Output "Done"

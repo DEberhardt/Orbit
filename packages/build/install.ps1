@@ -1,5 +1,5 @@
 [string[]]$PackageProviders = @('NuGet', 'PowerShellGet')
-[string[]]$PowerShellModules = @('Pester', 'posh-git', 'platyPS', 'InvokeBuild', 'BuildHelpers')
+[string[]]$PowerShellModules = @('Pester', 'posh-git', 'platyPS', 'InvokeBuild', 'BuildHelpers', 'MicrosoftTeams')
 
 # Install package providers for PowerShell Modules
 ForEach ($Provider in $PackageProviders) {
