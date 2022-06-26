@@ -30,7 +30,6 @@ $OrbitModule = $OrbitDirs.Basename
 # Fetching current Version from Root Module
 $RootManifestPath = "$LocationSRC\Orbit\Orbit.psd1"
 $RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
-$RootManifestTest | Format-List *
 
 # Setting Build Helpers Build Environment ENV:BH*
 Set-BuildEnvironment -Path $RootManifestTest.ModuleBase
@@ -62,16 +61,20 @@ foreach ($Module in $OrbitModule) {
   try {
     Write-Output "Working on Module: $Module"
     # This is where the module manifest lives
-    $manifestPath = "$LocationSRC\$Module\$Module.psd1"
+    $ManifestPath = "$LocationSRC\$Module\$Module.psd1"
+    $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
     # Setting Build Helpers Build Environment ENV:BH*
-    Set-BuildEnvironment -Path $manifestPath
+    Set-BuildEnvironment -Path $ManifestTest.ModuleBase
+
+    # Setting Build Helpers Build Environment ENV:BH*
+    Set-BuildEnvironment -Path $ManifestPath
 
     # Functions to Export
     $Pattern = @('FunctionsToExport', 'AliasesToExport')
     $Pattern | ForEach-Object {
       Write-Output "Old $_`:"
-      Select-String -Path $manifestPath -Pattern $_
+      Select-String -Path $ManifestPath -Pattern $_
 
       switch ($_) {
         'FunctionsToExport' { Set-ModuleFunction }
@@ -79,7 +82,7 @@ foreach ($Module in $OrbitModule) {
       }
 
       Write-Output "New $_`:"
-      Select-String -Path $manifestPath -Pattern $_
+      Select-String -Path $ManifestPath -Pattern $_
     }
 
     # Updating Version
