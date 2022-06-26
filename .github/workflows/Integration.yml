@@ -15,7 +15,9 @@ jobs:
       uses: actions/checkout@v2
     - name: Install
       run: .\packages\build\install.ps1
-    - name: Build
-      run: .\packages\build\\build.ps1
+    - name: Build Test
+      run: .\packages\build\build_test.ps1
+    - name: Build, Test, Lint & Publish
+      #run: .\packages\build\build_test.ps1
     - name: Finish
       run: Write-Output "Done"
