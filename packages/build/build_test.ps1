@@ -67,9 +67,6 @@ foreach ($Module in $OrbitModule) {
     # Setting Build Helpers Build Environment ENV:BH*
     Set-BuildEnvironment -Path $ManifestTest.ModuleBase -Force
 
-    # Setting Build Helpers Build Environment ENV:BH*
-    Set-BuildEnvironment -Path $ManifestPath
-
     # Functions to Export
     $Pattern = @('FunctionsToExport', 'AliasesToExport')
     $Pattern | ForEach-Object {
