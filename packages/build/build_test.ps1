@@ -3,7 +3,7 @@ $User = 'DEberhardt'
 $Copyright = "(c) 2020-$( (Get-Date).Year ) $Name. All rights reserved."
 
 # Build step
-Write-Output 'Building module'
+Write-Verbose -Message "General: Copying Data" -Verbose
 
 $RootDir = Get-Location
 Write-Output "Current location:      $($RootDir.Path)"
@@ -24,6 +24,7 @@ $LocationSRC = '.\src'
 $LocationDOC = '.\docs'
 
 # Defining Scope (Modules to process)
+Write-Verbose -Message 'General: Building Module Scope - Parsing Modules' -Verbose
 $OrbitDirs = Get-ChildItem -Path $LocationSRC -Directory | Sort-Object Name -Descending
 $OrbitModule = $OrbitDirs.Basename
 
@@ -32,8 +33,9 @@ $RootManifestPath = "$LocationSRC\Orbit\Orbit.psd1"
 $RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
 
 # Setting Build Helpers Build Environment ENV:BH*
+Write-Verbose -Message 'General: Module Version' -Verbose
 Set-BuildEnvironment -Path $RootManifestTest.ModuleBase
-Get-Item ENV:BH*
+Get-Item ENV:BH* | Select-Object Key,Value
 
 # Creating new version Number (determined from found Version)
 [System.Version]$version = $RootManifestTest.Version
@@ -57,19 +59,22 @@ Write-Output "New Version: $newVersion"
 
 
 # Updating all Modules
+Write-Verbose -Message 'Build: Loop through all Modules' -Verbose
 foreach ($Module in $OrbitModule) {
   #region Updating Version in all
   try {
-    Write-Output "Working on Module: $Module"
+    Write-Verbose -Message "$Module`: Testing Manifest" -Verbose
     # This is where the module manifest lives
     $ManifestPath = "$LocationSRC\$Module\$Module.psd1"
     $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
     # Setting Build Helpers Build Environment ENV:BH*
+    Write-Verbose -Message "$Module`: Preparing Build Environment" -Verbose
     Set-BuildEnvironment -Path $ManifestTest.ModuleBase -Force
-    Get-Item ENV:BH*
+    Get-Item ENV:BH* | Select-Object Key, Value
 
     # Functions to Export
+    Write-Verbose -Message "$Module`: Updating Manifest (FunctionsToExport, AliasesToExport)" -Verbose
     $Pattern = @('FunctionsToExport', 'AliasesToExport')
     $Pattern | ForEach-Object {
       Write-Output "Old $_`:"
@@ -87,6 +92,9 @@ foreach ($Module in $OrbitModule) {
     # Updating Version
     Update-Metadata -Path $env:BHPSModuleManifest -PropertyName Copyright -Value $Copyright
     Update-Metadata -Path $env:BHPSModuleManifest -PropertyName ModuleVersion -Value $newVersion
+
+    Write-Output "Manifest re-tested incl. Version, Copyright, etc."
+    Test-ModuleManifest -Path $ManifestPath
   }
   catch {
     throw $_
@@ -95,57 +103,40 @@ foreach ($Module in $OrbitModule) {
 
   #region Documentation
   # Create new markdown and XML help files
-  Write-Output 'Building new function documentation'
+  Write-Verbose -Message "$Module`: Creating MarkDownHelp" -Verbose
   Import-Module -Name "$LocationSRC\$Module" -Force
-  New-MarkdownHelp -Module "$Module" -OutputFolder '$LocationDOC\' -Force -AlphabeticParamsOrder:$false
+  New-MarkdownHelp -Module "$Module" -OutputFolder "$LocationDOC\" -Force -AlphabeticParamsOrder:$false
   New-ExternalHelp -Path "$LocationDOC\$Module\" -OutputPath "$LocationDOC\$Module\" -Force
-  #endregion
-
-  #region Pester Testing
-  $PesterConfig = New-PesterConfiguration
-  $PesterConfig.Run.PassThru = $true
-  $PesterConfig.Run.Exit = $true
-  $PesterConfig.Run.Throw = $true
-  $PesterConfig.TestResult.Enabled = $true
-  #$PesterConfig.CodeCoverage.Enabled = $true
-
-  $Script:TestResults = Invoke-Pester -Path $LocationSRC -Configuration $PesterConfig
-  #$CoveragePercent = [math]::floor(100 - (($Script:TestResults.CodeCoverage.NumberOfCommandsMissed / $Script:TestResults.CodeCoverage.NumberOfCommandsAnalyzed) * 100))
-
-  Set-ShieldsIoBadge -Subject Result -Status $Script:TestResults.Result
-  Set-ShieldsIoBadge -Subject Passed -Status $Script:TestResults.PassedCount -Color Blue
-  Set-ShieldsIoBadge -Subject Failed -Status $Script:TestResults.FailedCount -Color Red
-  Set-ShieldsIoBadge -Subject SkippedCount -Status $Script:TestResults.SkippedCount -Color Yellow
-  Set-ShieldsIoBadge -Subject NotRunCount -Status $Script:TestResults.NotRunCount -Color darkgrey
-
-  #Set-ShieldsIoBadge -Subject CodeCoverage -Status $Script:TestResults.Coverage -AsPercentage
-  #endregion
-
-  #region Publish the new version to the PowerShell Gallery
-  try {
-    # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
-    $PM = @{
-      Path        = "$LocationSRC\$Module\$Module.psd1"
-      NuGetApiKey = $env:NuGetApiKey
-      ErrorAction = 'Stop'
-      #Tags        = @('', '')
-      LicenseUri  = "https://github.com/$User/Orbit/blob/master/LICENSE.md"
-      ProjectUri  = "https://github.com/$User/Orbit"
-    }
-
-    #Publish-Module @PM
-    Publish-Module @PM -WhatIf
-    #Write-Output "$Module PowerShell Module version $newVersion published to the PowerShell Gallery."
-  }
-  catch {
-    # Sad panda; it broke
-    Write-Warning "Publishing update $newVersion to the PowerShell Gallery failed."
-    throw $_
-  }
+  $HelpFiles = Get-ChildItem -Path $LocationDOC -Recurse
+  Write-Output "Helpfiles Count: $($HelpFiles.Count)"
   #endregion
 }
 
+#region Pester Testing
+Write-Verbose -Message "Pester Testing" -Verbose
+$PesterConfig = New-PesterConfiguration
+$PesterConfig.Run.PassThru = $true
+$PesterConfig.Run.Exit = $true
+$PesterConfig.Run.Throw = $true
+$PesterConfig.TestResult.Enabled = $true
+#$PesterConfig.CodeCoverage.Enabled = $true
+
+$Script:TestResults = Invoke-Pester -Path $ModuleDir -Configuration $PesterConfig
+#$CoveragePercent = [math]::floor(100 - (($Script:TestResults.CodeCoverage.NumberOfCommandsMissed / $Script:TestResults.CodeCoverage.NumberOfCommandsAnalyzed) * 100))
+
+Write-Verbose -Message "Pester Testing - Updating ReadMe" -Verbose
+Set-ShieldsIoBadge -Subject Result -Status $Script:TestResults.Result
+Set-ShieldsIoBadge -Subject Passed -Status $Script:TestResults.PassedCount -Color Blue
+Set-ShieldsIoBadge -Subject Failed -Status $Script:TestResults.FailedCount -Color Red
+Set-ShieldsIoBadge -Subject SkippedCount -Status $Script:TestResults.SkippedCount -Color Yellow
+Set-ShieldsIoBadge -Subject NotRunCount -Status $Script:TestResults.NotRunCount -Color darkgrey
+
+#Set-ShieldsIoBadge -Subject CodeCoverage -Status $Script:TestResults.Coverage -AsPercentage
+#endregion
+
 #region Documentation - Github
+
+Write-Verbose -Message 'Documentation - Updating ReadMe' -Verbose
 # Updating ShieldsIO badges
 Set-ShieldsIoBadge # Default updates 'Build' to 'pass' or 'fail'
 
@@ -162,6 +153,7 @@ Set-ShieldsIoBadge -Subject RC -Status $Script:FunctionStatus.PublicRC -Color Gr
 Set-ShieldsIoBadge -Subject Beta -Status $Script:FunctionStatus.PublicBeta -Color Yellow
 Set-ShieldsIoBadge -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Color Orange
 #endregion
+
 
 #region Publish the new version back to Master on GitHub
 try {
@@ -184,5 +176,34 @@ catch {
   # Sad panda; it broke
   Write-Warning "Publishing update $newVersion to GitHub failed."
   throw $_
+}
+#endregion
+
+
+
+#region Publish the new version to the PowerShell Gallery
+Write-Verbose -Message 'Publish: Loop through all Modules' -Verbose
+foreach ($Module in $OrbitModule) {
+  Write-Verbose -Message "$Module`: Publishing Module - PowerShellGallery" -Verbose
+  try {
+    # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
+    $PM = @{
+      Path        = "$LocationSRC\$Module\$Module.psd1"
+      NuGetApiKey = $env:NuGetApiKey
+      ErrorAction = 'Stop'
+      #Tags        = @('', '')
+      LicenseUri  = "https://github.com/$User/Orbit/blob/master/LICENSE.md"
+      ProjectUri  = "https://github.com/$User/Orbit"
+    }
+
+    #Publish-Module @PM
+    Publish-Module @PM -WhatIf
+    #Write-Output "$Module PowerShell Module version $newVersion published to the PowerShell Gallery."
+  }
+  catch {
+    # Sad panda; it broke
+    Write-Warning "Publishing update $newVersion to the PowerShell Gallery failed."
+    throw $_
+  }
 }
 #endregion
