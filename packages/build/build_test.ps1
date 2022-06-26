@@ -17,6 +17,7 @@ New-Item -Path $ModuleDir -ItemType Directory
 $Excludes = @('.vscode', '*.git*', 'TODO.md', 'Archive', 'Incubator', 'packages', 'Workbench', 'PSScriptA*', 'Scrap*.*')
 Copy-Item -Path * -Destination $ModuleDir -Exclude $Excludes -Recurse -Force
 
+Set-Location $ModuleDir
 
 # Defining Relative Location to packages\build where this file resides
 $LocationSRC = '.\src'
@@ -121,15 +122,16 @@ foreach ($Module in $OrbitModule) {
   try {
     # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
     $PM = @{
-      Path        = "$LocationSRC\$Module"
+      Path        = "$LocationSRC\$Module\$Module.psd1"
       NuGetApiKey = $env:NuGetApiKey
       ErrorAction = 'Stop'
-      Tags        = @('', '')
+      #Tags        = @('', '')
       LicenseUri  = "https://github.com/$User/Orbit/blob/master/LICENSE.md"
       ProjectUri  = "https://github.com/$User/Orbit"
     }
 
     #Publish-Module @PM
+    Publish-Module @PM -WhatIf
     #Write-Output "$Module PowerShell Module version $newVersion published to the PowerShell Gallery."
   }
   catch {
