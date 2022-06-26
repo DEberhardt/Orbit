@@ -33,6 +33,7 @@ $RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
 
 # Setting Build Helpers Build Environment ENV:BH*
 Set-BuildEnvironment -Path $RootManifestTest.ModuleBase
+Get-Item ENV:BH*
 
 # Creating new version Number (determined from found Version)
 [System.Version]$version = $RootManifestTest.Version
@@ -66,6 +67,7 @@ foreach ($Module in $OrbitModule) {
 
     # Setting Build Helpers Build Environment ENV:BH*
     Set-BuildEnvironment -Path $ManifestTest.ModuleBase -Force
+    Get-Item ENV:BH*
 
     # Functions to Export
     $Pattern = @('FunctionsToExport', 'AliasesToExport')
@@ -74,8 +76,8 @@ foreach ($Module in $OrbitModule) {
       Select-String -Path $ManifestPath -Pattern $_
 
       switch ($_) {
-        'FunctionsToExport' { Set-ModuleFunction }
-        'AliasesToExport' { Set-ModuleAlias }
+        'FunctionsToExport' { Set-ModuleFunction -Name $ManifestTest.ModuleBase }
+        'AliasesToExport' { Set-ModuleAlias -Name $ManifestTest.ModuleBase }
       }
 
       Write-Output "New $_`:"
