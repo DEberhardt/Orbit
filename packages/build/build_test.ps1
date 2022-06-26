@@ -58,9 +58,18 @@ else {
 Write-Output "New Version: $newVersion"
 
 Write-Verbose -Message "General: Updating Orbit.psm1 to reflect all nested Modules' Version" -Verbose
-$content = Get-Content -Path "$($RootManifestTest.ModuleBase)\Orbit.psm1"
-$newContent = $content -replace "'; RequiredVersion = '*'", "'; RequiredVersion = '$newVersion'"
-$newContent | Set-Content -Path "$($RootManifestTest.ModuleBase)\Orbit.psm1"
+$RequiredModulesValue = @"
+@(
+  @{ModuleName = 'MicrosoftTeams'; ModuleVersion = '4.2.0'; },
+  #@{ModuleName = 'Microsoft.Graph'; ModuleVersion = '1.9.6'; },
+  @{ModuleName = 'Orbit.Authentication'; RequiredVersion = '$newVersion'; },
+  @{ModuleName = 'Orbit.Groups'; RequiredVersion = '$newVersion'; },
+  @{ModuleName = 'Orbit.Teams'; RequiredVersion = '$newVersion'; },
+  @{ModuleName = 'Orbit.Tools'; RequiredVersion = '$newVersion'; },
+  @{ModuleName = 'Orbit.Users'; RequiredVersion = '$newVersion'; }
+)
+"@
+Update-Metadata -Path $env:BHPSModuleManifest -PropertyName RequiredModules -Value $RequiredModulesValue
 
 # Updating all Modules
 Write-Verbose -Message 'Build: Loop through all Modules' -Verbose
