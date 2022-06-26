@@ -101,10 +101,12 @@ foreach ($Module in $OrbitModule) {
   }
   #endregion
 
+  Write-Verbose -Message "$Module`: Importing Module" -Verbose
+  Import-Module -Name $ManifestTest.Path -Force
+
   #region Documentation
   # Create new markdown and XML help files
   Write-Verbose -Message "$Module`: Creating MarkDownHelp" -Verbose
-  Import-Module -Name "$LocationSRC\$Module" -Force
   New-MarkdownHelp -Module "$Module" -OutputFolder "$LocationDOC\" -Force -AlphabeticParamsOrder:$false
   New-ExternalHelp -Path "$LocationDOC\$Module\" -OutputPath "$LocationDOC\$Module\" -Force
   $HelpFiles = Get-ChildItem -Path $LocationDOC -Recurse
