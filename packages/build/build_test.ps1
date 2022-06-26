@@ -30,9 +30,10 @@ $OrbitModule = $OrbitDirs.Basename
 # Fetching current Version from Root Module
 $RootManifestPath = "$LocationSRC\Orbit\Orbit.psd1"
 $RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
+$RootManifestTest | Format-List *
 
 # Setting Build Helpers Build Environment ENV:BH*
-Set-BuildEnvironment -Path $RootManifestPath
+Set-BuildEnvironment -Path $RootManifestTest.Path
 
 # Creating new version Number (determined from found Version)
 [System.Version]$version = $RootManifestTest.Version
