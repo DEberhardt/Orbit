@@ -105,16 +105,16 @@ foreach ($Module in $OrbitModule) {
   try {
     # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
     $PM = @{
-      Path         = "$LocationSRC\$Module"
-      NuGetApiKey  = $env:NuGetApiKey
-      ErrorAction  = 'Stop'
-      Tags         = @('', '')
-      LicenseUri   = "https://github.com/$User/Orbit/blob/master/LICENSE.md"
-      ProjectUri   = "https://github.com/$User/Orbit"
+      Path        = "$LocationSRC\$Module"
+      NuGetApiKey = $env:NuGetApiKey
+      ErrorAction = 'Stop'
+      Tags        = @('', '')
+      LicenseUri  = "https://github.com/$User/Orbit/blob/master/LICENSE.md"
+      ProjectUri  = "https://github.com/$User/Orbit"
     }
 
-    Publish-Module @PM
-    Write-Output "$Module PowerShell Module version $newVersion published to the PowerShell Gallery."
+    #Publish-Module @PM
+    #Write-Output "$Module PowerShell Module version $newVersion published to the PowerShell Gallery."
   }
   catch {
     # Sad panda; it broke
@@ -145,7 +145,6 @@ Set-ShieldsIoBadge -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Co
 #region Publish the new version back to Master on GitHub
 try {
   # Set up a path to the git.exe cmd, import posh-git to give us control over git, and then push changes to GitHub
-  # Note that "update version" is included in the appveyor.yml file's "skip a build" regex to avoid a loop
   $env:Path += ";$env:ProgramFiles\Git\cmd"
   Import-Module posh-git -ErrorAction Stop
   git checkout master

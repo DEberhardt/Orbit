@@ -1,0 +1,21 @@
+﻿name: test
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  Integrate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install
+      run: .\install.ps1
+    - name: Build
+      run: .\build.ps1
+    - name: Finish
+      run: Write-Output "Done"
