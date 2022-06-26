@@ -18,6 +18,7 @@ jobs:
     - name: Build Test
       run: .\packages\build\build_test.ps1
     - name: Build, Test, Lint & Publish
+      run: Write-Output "Skipped"
       #run: .\packages\build\build_test.ps1
     - name: Finish
       run: Write-Output "Done"
