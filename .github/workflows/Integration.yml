@@ -1,8 +1,8 @@
 ﻿name: Integration
 on:
   push:
-    branches:
-      - '!main'
+    branches-ignore:
+      - 'main'
 
 jobs:
   Integration:
