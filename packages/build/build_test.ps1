@@ -48,7 +48,7 @@ Write-Output "Next available Version: $nextAvailableVersion"
 # To publish a new minor version, simply remove set the version in Orbit.psd1 from "1.3.14" to "1.4"
 [String]$nextProposedVersion = New-Object -TypeName System.Version -ArgumentList ($version.Major, $version.Minor, $($version.Build + 1))
 Write-Output "Next proposed Version: $nextProposedVersion"
-if ( $nextAvailableVersion -lt $nextProposedVersion ) {
+if ( $nextProposedVersion -lt $nextAvailableVersion ) {
   Write-Warning 'Version mismatch - taking next available version'
   $newVersion = $nextAvailableVersion
 }
