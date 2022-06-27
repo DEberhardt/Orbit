@@ -1,5 +1,4 @@
 $Name = 'David Eberhardt'
-$User = 'DEberhardt'
 $Copyright = "(c) 2020-$( (Get-Date).Year ) $Name. All rights reserved."
 
 # Defining Relative Location to packages\build where this file resides
@@ -109,8 +108,8 @@ foreach ($Module in $OrbitModule) {
       NuGetApiKey = $env:NuGetApiKey
       ErrorAction = 'Stop'
       Tags        = @('', '')
-      LicenseUri  = "https://github.com/$User/Orbit/blob/master/LICENSE.md"
-      ProjectUri  = "https://github.com/$User/Orbit"
+      LicenseUri  = "https://github.com/$env:USER/Orbit/blob/master/LICENSE.md"
+      ProjectUri  = "https://github.com/$env:USER/Orbit"
     }
 
     #Publish-Module @PM

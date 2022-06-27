@@ -58,18 +58,12 @@ else {
 Write-Output "New Version: $newVersion"
 
 Write-Verbose -Message "General: Updating Orbit.psm1 to reflect all nested Modules' Version" -Verbose
-$RequiredModulesValue = @"
-@(
-  @{ModuleName = 'MicrosoftTeams'; ModuleVersion = '4.2.0'; },
-  #@{ModuleName = 'Microsoft.Graph'; ModuleVersion = '1.9.6'; },
-  @{ModuleName = 'Orbit.Authentication'; RequiredVersion = '$newVersion'; },
-  @{ModuleName = 'Orbit.Groups'; RequiredVersion = '$newVersion'; },
-  @{ModuleName = 'Orbit.Teams'; RequiredVersion = '$newVersion'; },
-  @{ModuleName = 'Orbit.Tools'; RequiredVersion = '$newVersion'; },
-  @{ModuleName = 'Orbit.Users'; RequiredVersion = '$newVersion'; }
-)
-"@
-Update-Metadata -Path $env:BHPSModuleManifest -PropertyName RequiredModules -Value $RequiredModulesValue
+
+# Resetting RequiredModules in Orbit Root to allow processing via Build script - This will be added later, before publishing
+$RequiredModulesValue   = @(
+  @{ModuleName = 'MicrosoftTeams'; ModuleVersion = '4.2.0'; }
+  )
+  Update-Metadata -Path $env:BHPSModuleManifest -PropertyName RequiredModules -Value $RequiredModulesValue
 
 # Updating all Modules
 Write-Verbose -Message 'Build: Loop through all Modules' -Verbose
@@ -123,7 +117,8 @@ foreach ($Module in $OrbitModule) {
   New-MarkdownHelp -Module "$Module" -OutputFolder "$LocationDOC\" -Force -AlphabeticParamsOrder:$false
   New-ExternalHelp -Path "$LocationDOC\$Module\" -OutputPath "$LocationDOC\$Module\" -Force
   $HelpFiles = Get-ChildItem -Path $LocationDOC -Recurse
-  Write-Output "Helpfiles Count: $($HelpFiles.Count)"
+  Write-Output "Helpfiles created: $($HelpFiles.Count)"
+
   #endregion
 }
 
@@ -170,7 +165,7 @@ Set-ShieldsIoBadge -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Co
 #endregion
 
 
-#region Publish the new version back to Master on GitHub
+#region Publish the new version back to Main on GitHub
 try {
   #TODO Check Invoke-Git and replace the below?
   # Set up a path to the git.exe cmd, import posh-git to give us control over git, and then push changes to GitHub
@@ -197,6 +192,18 @@ catch {
 
 
 #region Publish the new version to the PowerShell Gallery
+# Setting RequiredModules in Orbit Root before publishing
+$RequiredModulesValue = @(
+  @{ModuleName = 'MicrosoftTeams'; ModuleVersion = '4.2.0'; },
+  #@{ModuleName = 'Microsoft.Graph'; ModuleVersion = '1.9.6'; },
+  @{ModuleName = 'Orbit.Authentication'; RequiredVersion = "$newVersion"; },
+  @{ModuleName = 'Orbit.Groups'; RequiredVersion = "$newVersion"; },
+  @{ModuleName = 'Orbit.Teams'; RequiredVersion = "$newVersion"; },
+  @{ModuleName = 'Orbit.Tools'; RequiredVersion = "$newVersion"; },
+  @{ModuleName = 'Orbit.Users'; RequiredVersion = "$newVersion"; }
+)
+Update-Metadata -Path $RootManifestTest.Path -PropertyName RequiredModules -Value $RequiredModulesValue
+
 Write-Verbose -Message 'Publish: Loop through all Modules' -Verbose
 foreach ($Module in $OrbitModule) {
   Write-Verbose -Message "$Module`: Publishing Module - PowerShellGallery" -Verbose
@@ -207,8 +214,8 @@ foreach ($Module in $OrbitModule) {
       NuGetApiKey = $env:NuGetApiKey
       ErrorAction = 'Stop'
       #Tags        = @('', '')
-      LicenseUri  = "https://github.com/$User/Orbit/blob/master/LICENSE.md"
-      ProjectUri  = "https://github.com/$User/Orbit"
+      LicenseUri  = "https://github.com/$env:USER/Orbit/blob/master/LICENSE.md"
+      ProjectUri  = "https://github.com/$env:USER/Orbit"
     }
 
     #Publish-Module @PM

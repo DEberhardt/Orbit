@@ -1,7 +1,8 @@
-# using module .\Class\Orbit.Classes.psm1
+using module .\Class\Orbit.Classes.psm1
 # Above needs to remain the first line to import Classes
 # remove the comment when using classes
 
+# Requirements
 #requires -Version 5
 #Requires -Modules @{ ModuleName="MicrosoftTeams"; ModuleVersion="4.2.0" }
 #Req#uires -Modules @{ ModuleName='Orbit.Authentication'; RequiredVersion = '0.0.0.0' }
@@ -9,11 +10,6 @@
 #Req#uires -Modules @{ ModuleName='Orbit.Teams'; RequiredVersion = '0.0.0.0' }
 #Req#uires -Modules @{ ModuleName='Orbit.Tools'; RequiredVersion = '0.0.0.0' }
 #Req#uires -Modules @{ ModuleName='Orbit.Users'; RequiredVersion = '0.0.0.0' }
-
-
-#Get public and private function definition files.
-$Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse -ErrorAction SilentlyContinue )
-$Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -Recurse -ErrorAction SilentlyContinue )
 
 <#
   Orbit - Module supplementing Microsoft.Graph and MicrosoftTeams
@@ -38,6 +34,10 @@ $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -Recurse -ErrorAct
 #>
 
 #region Functions
+#Get public and private function definition files.
+$Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse -ErrorAction SilentlyContinue )
+$Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -Recurse -ErrorAction SilentlyContinue )
+
 #Dot source the files
 Foreach ($Function in @($Public + $Private)) {
   Try {
@@ -75,14 +75,18 @@ $Aliases = Foreach ($Function in @($Public)) {
     }
   }
 }
-Write-Verbose -Message "Aliases to Export - List: $($Aliases -join ',')"
-Write-Verbose -Message "Aliases to Export - Count: $($Aliases.Count)"
+Write-Verbose -Message "Queried Aliases to Export - List: $($Aliases -join ',')"
+Write-Verbose -Message "Queried Aliases to Export - Count: $($Aliases.Count)"
 
 # Manual definitions
+# Adding manual Aliases (not recorded in Functions)
+
 $ManualAliases = @()
+Write-Verbose -Message "Manual Aliases to Export - Count: $($ManualAliases.Count)"
 
 # Exporting Module Members (Aliases)
 $AliasesToExport = @($Aliases + $ManualAliases)
+Write-Verbose -Message "Total Aliases to Export - Count: $($AliasesToExport.Count)"
 if ( $AliasesToExport ) {
   Export-ModuleMember -Alias $AliasesToExport
 }
@@ -145,5 +149,4 @@ using System.Management.Automation;
 
   $null = Add-Type -TypeDefinition $code *>&1
 }
-
 #endregion
