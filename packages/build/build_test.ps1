@@ -114,7 +114,7 @@ foreach ($Module in $OrbitModule) {
   #region Documentation
   # Create new markdown and XML help files
   Write-Verbose -Message "$Module`: Creating MarkDownHelp" -Verbose
-  New-MarkdownHelp -Module "$Module" -OutputFolder "$LocationDOC\" -Force -AlphabeticParamsOrder:$false
+  New-MarkdownHelp -Module $.ManifestTestName -OutputFolder "$LocationDOC\" -Force -AlphabeticParamsOrder:$false
   New-ExternalHelp -Path "$LocationDOC\$Module\" -OutputPath "$LocationDOC\$Module\" -Force
   $HelpFiles = Get-ChildItem -Path $LocationDOC -Recurse
   Write-Output "Helpfiles created: $($HelpFiles.Count)"
