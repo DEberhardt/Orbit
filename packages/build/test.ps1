@@ -9,6 +9,7 @@
 
   Set-Location $ModuleDir
   foreach ($Module in $OrbitModule) {
+    Write-Output "Importing $Module - $ModuleDir\$Module\$Module.psd1"
     Import-Module "$ModuleDir\$Module\$Module.psd1"
   }
 }

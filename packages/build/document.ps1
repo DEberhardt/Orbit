@@ -13,6 +13,10 @@
 process {
   # Updating Component Status
   Write-Verbose -Message 'Updating Component Status in ReadMe' -Verbose
+
+  # Setting Build Helpers Build Environment ENV:BH*
+  Set-BuildEnvironment -Path $ModuleDir
+
   # Updating ShieldsIO badges
   Set-ShieldsIoBadge # Default updates 'Build' to 'pass' or 'fail'
 
