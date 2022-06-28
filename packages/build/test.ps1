@@ -8,7 +8,9 @@
   Write-Verbose "Module build location: $ModuleDir"
 
   Set-Location $ModuleDir
-
+  foreach ($Module in $OrbitModule) {
+    Import-Module "$ModuleDir\$Module\$Module.psd1"
+  }
 }
 process {
   Write-Verbose -Message 'Loaded Modules' -Verbose
