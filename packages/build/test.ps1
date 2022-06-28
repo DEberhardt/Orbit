@@ -8,9 +8,12 @@
   Write-Verbose "Module build location: $ModuleDir"
 
   Set-Location $ModuleDir
-  
+
 }
 process {
+  Write-Verbose -Message 'Loaded Modules' -Verbose
+  Get-Module
+
   Write-Verbose -Message 'Pester Testing' -Verbose
   # Code Coverage currently disabled as output is not secure (no value in $TestResults.Coverage)
 
