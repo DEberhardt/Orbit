@@ -11,15 +11,23 @@ jobs:
       run:
         shell: pwsh
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install
-      run: |
-        Write-Output "Installing"
-        .\packages\build\install.ps1
-    - name: Build, Test, Lint Test
-      run: |
-        Write-Output "Testing Build Script"
-        .\packages\build\build_test.ps1
-    - name: Finish
-      run: Write-Output "Done"
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install
+        run: .\packages\build\install.ps1
+      - name: Build
+        run: .\packages\build\build.ps1
+        env:
+          USER: ${{secrets.USER}}
+          CODESIGN: ${{secrets.CODESIGN}}
+      - name: Test
+        run: .\packages\build\test.ps1
+      - name: Document
+        run: .\packages\build\document.ps1
+      - name: Commit to main
+        run: .\packages\build\commit.ps1
+        env:
+          USER: ${{secrets.USER}}
+          PUSHTOKEN: ${{secrets.PUSHTOKEN}}
+      - name: Finish
+        run: Write-Output "Done"

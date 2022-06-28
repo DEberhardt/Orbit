@@ -1,0 +1,33 @@
+﻿name: Release
+on:
+  push:
+    branches-ignore:
+      - '*'
+
+jobs:
+  Release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install
+      run: |
+        Write-Output "Installing"
+        .\packages\build\install.ps1
+    - name: Build, Test, Lint Test
+      run: |
+        Write-Output "Testing Build Script"
+        .\packages\build\build_test.ps1
+    - name: Publish
+      run: |
+        Write-Output "Publishing Module"
+        #.\packages\build\release.ps1
+      env:
+        PUSHTOKEN: ${{secrets.PUSHTOKEN}}
+        USER: ${{secrets.USER}}
+        NuGetApiKey: ${{secrets.NuGetApiKey}}
+    - name: Finish
+      run: Write-Output "Done"

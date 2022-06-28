@@ -1,52 +1,83 @@
-$Name = 'David Eberhardt'
-$Copyright = "(c) 2020-$( (Get-Date).Year ) $Name. All rights reserved."
+﻿begin {
+  # Build step
+  Write-Output 'Building module'
 
-# Defining Relative Location to packages\build where this file resides
-$LocationSRC = '..\..\src'
-$LocationDOC = '..\..\docs'
+  $RootDir = Get-Location
+  Write-Verbose "Current location:      $($RootDir.Path)"
+  $ModuleDir = "$RootDir\packages\module"
+  Write-Verbose "Module build location: $ModuleDir"
 
-# Defining Scope (Modules to process)
-$OrbitDirs = Get-ChildItem -Path $LocationSRC -Directory | Sort-Object Name -Descending
-$OrbitModule = $OrbitDirs.Basename
-
-# Fetching current Version from Root Module
-$RootManifestPath = "$LocationSRC\Orbit\Orbit.psd1"
-$RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
-
-# Setting Build Helpers Build Environment ENV:BH*
-Set-BuildEnvironment -Path $RootManifestPath
-
-# Creating new version Number (determined from found Version)
-[System.Version]$version = $RootManifestTest.Version
-Write-Output "Old Version: $version"
-# Determining Next available Version from published Package
-$nextAvailableVersion = Get-NextNugetPackageVersion -Name $env:BHProjectName
-Write-Output "Next available Version: $nextAvailableVersion"
-# We're going to add 1 to the build value since a new commit has been merged to Master
-# This means that the major / minor / build values will be consistent across GitHub and the Gallery
-# To publish a new minor version, simply remove set the version in Orbit.psd1 from "1.3.14" to "1.4"
-[String]$nextProposedVersion = New-Object -TypeName System.Version -ArgumentList ($version.Major, $version.Minor, $($version.Build + 1))
-Write-Output "Next proposed Version: $nextProposedVersion"
-if ( $nextAvailableVersion -lt $nextProposedVersion ) {
-  Write-Warning 'Version mismatch - taking next available version'
-  $newVersion = $nextAvailableVersion
 }
-else {
-  $newVersion = $nextProposedVersion
-}
-Write-Output "New Version: $newVersion"
+process {
+  Write-Verbose -Message 'Creating Directory' -Verbose
+  # Create Directory
+  New-Item -Path $ModuleDir -ItemType Directory
+
+  # Copy from Server
+  Write-Verbose -Message 'Copying Module' -Verbose
+  $Excludes = @('.vscode', '*.git*', 'TODO.md', 'Archive', 'Incubator', 'packages', 'Workbench', 'PSScriptA*', 'Scrap*.*')
+  Copy-Item -Path * -Destination $ModuleDir -Exclude $Excludes -Recurse -Force
+
+  #region Orbit specific
+  Set-Location $ModuleDir
+
+  # Defining Scope (Modules to process)
+  Write-Verbose -Message 'General: Building Module Scope - Parsing Modules' -Verbose
+  $global:OrbitDirs = Get-ChildItem -Path $LocationSRC -Directory | Sort-Object Name -Descending
+  $global:OrbitModule = $OrbitDirs.Basename
+  Write-Output "Defined Scope: $($OrbitModule -join ', ')"
+  #endregion
+
+  #region Define Root Module
+  # Fetching current Version from Root Module
+  $ManifestPath = '.\src\Orbit\Orbit.psd1'
+  $ManifestTest = Test-ModuleManifest -Path $ManifestPath
+
+  # Setting Build Helpers Build Environment ENV:BH*
+  Write-Verbose -Message 'General: Module Version' -Verbose
+  Set-BuildEnvironment -Path $ManifestTest.ModuleBase
+
+  # Creating new version Number (determined from found Version)
+  [System.Version]$version = $ManifestTest.Version
+  Write-Output "Old Version: $version"
+  # Determining Next available Version from published Package
+  $nextAvailableVersion = Get-NextNugetPackageVersion -Name $env:BHProjectName
+  Write-Output "Next available Version: $nextAvailableVersion"
+  # We're going to add 1 to the build value since a new commit has been merged to Master
+  # This means that the major / minor / build values will be consistent across GitHub and the Gallery
+  # To publish a new minor version, simply remove set the version in Orbit.psd1 from "1.3.14" to "1.4"
+  [String]$nextProposedVersion = New-Object -TypeName System.Version -ArgumentList ($version.Major, $version.Minor, $($version.Build + 1))
+  Write-Output "Next proposed Version: $nextProposedVersion"
+  if ( $nextProposedVersion -lt $nextAvailableVersion ) {
+    Write-Warning 'Version mismatch - taking next available version'
+    $global:newVersion = $nextAvailableVersion
+  }
+  else {
+    $global:newVersion = $nextProposedVersion
+  }
+  Write-Output "New Version: $global:newVersion"
 
 
-# Updating all Modules
-foreach ($Module in $OrbitModule) {
-  #region Updating Version in all
-  try {
-    Write-Output "Working on Module: $Module"
+  # Resetting RequiredModules in Orbit Root to allow processing via Build script - This will be added later, before publishing
+  Write-Verbose -Message "General: Updating Orbit.psm1 to reflect all nested Modules' Version" -Verbose
+  $RequiredModulesValue = @(
+    @{ModuleName = 'MicrosoftTeams'; ModuleVersion = '4.2.0'; }
+  )
+  Update-Metadata -Path $env:BHPSModuleManifest -PropertyName RequiredModules -Value $RequiredModulesValue
+  #region
+
+  # Updating all Modules
+  Write-Verbose -Message 'Build: Loop through all Modules' -Verbose
+  foreach ($Module in $OrbitModule) {
+    Write-Verbose -Message "$Module`: Testing Manifest" -Verbose
     # This is where the module manifest lives
-    $manifestPath = "$LocationSRC\$Module\$Module.psd1"
+    $ManifestPath = ".\src\$Module\$Module.psd1"
+    $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
     # Setting Build Helpers Build Environment ENV:BH*
-    Set-BuildEnvironment -Path $manifestPath
+    Write-Verbose -Message "$Module`: Preparing Build Environment" -Verbose
+    Set-BuildEnvironment -Path $ManifestTest.ModuleBase -Force
+    Get-Item ENV:BH* | Select-Object Key, Value
 
     # Functions to Export
     $Pattern = @('FunctionsToExport', 'AliasesToExport')
@@ -55,8 +86,8 @@ foreach ($Module in $OrbitModule) {
       Select-String -Path $manifestPath -Pattern $_
 
       switch ($_) {
-        'FunctionsToExport' { Set-ModuleFunction }
-        'AliasesToExport' { Set-ModuleAlias }
+        'FunctionsToExport' { Set-ModuleFunction -Name $manifestPath }
+        'AliasesToExport' { Set-ModuleAlias -Name $manifestPath }
       }
 
       Write-Output "New $_`:"
@@ -64,100 +95,20 @@ foreach ($Module in $OrbitModule) {
     }
 
     # Updating Version
-    Update-Metadata -Path $env:BHPSModuleManifest -PropertyName Copyright -Value $Copyright
-    Update-Metadata -Path $env:BHPSModuleManifest -PropertyName ModuleVersion -Value $newVersion
+    $Copyright = "(c) 2020-$( (Get-Date).Year ) $Name. All rights reserved."
+    Update-Metadata -Path $ManifestTest.Path -PropertyName Copyright -Value $Copyright
+    Update-Metadata -Path $ManifestTest.Path -PropertyName ModuleVersion -Value $newVersion
+
+    Write-Output 'Manifest re-tested incl. Version, Copyright, etc.'
+    $ManifestTest = Test-ModuleManifest -Path $ManifestPath
+    $ManifestTest
+
+    #Importing Module
+    Write-Verbose -Message "$Module`: Importing Module" -Verbose
+    Import-Module $manifestTest.Path
   }
-  catch {
-    throw $_
-  }
-  #endregion
 
-  #region Documentation
-  # Create new markdown and XML help files
-  Write-Output 'Building new function documentation'
-  Import-Module -Name "$LocationSRC\$Module" -Force
-  New-MarkdownHelp -Module "$Module" -OutputFolder '$LocationDOC\' -Force -AlphabeticParamsOrder:$false
-  New-ExternalHelp -Path "$LocationDOC\$Module\" -OutputPath "$LocationDOC\$Module\" -Force
-  #endregion
-
-  #region Pester Testing
-  $PesterConfig = New-PesterConfiguration
-  $PesterConfig.Run.PassThru = $true
-  $PesterConfig.Run.Exit = $true
-  $PesterConfig.Run.Throw = $true
-  $PesterConfig.TestResult.Enabled = $true
-  #$PesterConfig.CodeCoverage.Enabled = $true
-
-  $Script:TestResults = Invoke-Pester -Path $LocationSRC -Configuration $PesterConfig
-  #$CoveragePercent = [math]::floor(100 - (($Script:TestResults.CodeCoverage.NumberOfCommandsMissed / $Script:TestResults.CodeCoverage.NumberOfCommandsAnalyzed) * 100))
-
-  Set-ShieldsIoBadge -Subject Result -Status $Script:TestResults.Result
-  Set-ShieldsIoBadge -Subject Passed -Status $Script:TestResults.PassedCount -Color Blue
-  Set-ShieldsIoBadge -Subject Failed -Status $Script:TestResults.FailedCount -Color Red
-  Set-ShieldsIoBadge -Subject SkippedCount -Status $Script:TestResults.SkippedCount -Color Yellow
-  Set-ShieldsIoBadge -Subject NotRunCount -Status $Script:TestResults.NotRunCount -Color darkgrey
-
-  #Set-ShieldsIoBadge -Subject CodeCoverage -Status $Script:TestResults.Coverage -AsPercentage
-  #endregion
-
-  #region Publish the new version to the PowerShell Gallery
-  try {
-    # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
-    $PM = @{
-      Path        = "$LocationSRC\$Module"
-      NuGetApiKey = $env:NuGetApiKey
-      ErrorAction = 'Stop'
-      Tags        = @('', '')
-      LicenseUri  = "https://github.com/$env:USER/Orbit/blob/master/LICENSE.md"
-      ProjectUri  = "https://github.com/$env:USER/Orbit"
-    }
-
-    #Publish-Module @PM
-    #Write-Output "$Module PowerShell Module version $newVersion published to the PowerShell Gallery."
-  }
-  catch {
-    # Sad panda; it broke
-    Write-Warning "Publishing update $newVersion to the PowerShell Gallery failed."
-    throw $_
-  }
-  #endregion
 }
-
-#region Documentation - Github
-# Updating ShieldsIO badges
-Set-ShieldsIoBadge # Default updates 'Build' to 'pass' or 'fail'
-
-# Updating Component Status
-$AllPublicFunctions = Get-ChildItem -LiteralPath $orbitDirs.FullName | Where-Object Name -EQ 'Public' | Get-ChildItem -Filter *.ps1
-$AllPrivateFunctions = Get-ChildItem -LiteralPath $orbitDirs.FullName | Where-Object Name -EQ 'Private' | Get-ChildItem -Filter *.ps1
-$Script:FunctionStatus = Get-Functionstatus -PublicPath $($AllPublicFunctions.FullName) -PrivatePath $($AllPrivateFunctions.FullName)
-
-Set-ShieldsIoBadge -Subject Public -Status $Script:FunctionStatus.Public -Color Blue
-Set-ShieldsIoBadge -Subject Private -Status $Script:FunctionStatus.Private -Color LightGrey
-
-Set-ShieldsIoBadge -Subject Live -Status $Script:FunctionStatus.PublicLive -Color Blue
-Set-ShieldsIoBadge -Subject RC -Status $Script:FunctionStatus.PublicRC -Color Green
-Set-ShieldsIoBadge -Subject Beta -Status $Script:FunctionStatus.PublicBeta -Color Yellow
-Set-ShieldsIoBadge -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Color Orange
-#endregion
-
-#region Publish the new version back to Master on GitHub
-try {
-  # Set up a path to the git.exe cmd, import posh-git to give us control over git, and then push changes to GitHub
-  $env:Path += ";$env:ProgramFiles\Git\cmd"
-  Import-Module posh-git -ErrorAction Stop
-  git checkout master
-  git add --all
-  git status
-  git commit -s -m "Update version to $newVersion"
-  git tag "v$newVersion"
-  git push origin master
-  git push --tags origin
-  Write-Output "$Module PowerShell Module version $newVersion published to GitHub."
+end {
+  Set-Location $RootDir.Path
 }
-catch {
-  # Sad panda; it broke
-  Write-Warning "Publishing update $newVersion to GitHub failed."
-  throw $_
-}
-#endregion

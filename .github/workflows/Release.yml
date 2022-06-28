@@ -11,23 +11,30 @@ jobs:
       run:
         shell: pwsh
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install
-      run: |
-        Write-Output "Installing"
-        .\packages\build\install.ps1
-    - name: Build, Test, Lint Test
-      run: |
-        Write-Output "Testing Build Script"
-        .\packages\build\build_test.ps1
-    - name: Publish
-      run: |
-        Write-Output "Publishing Module"
-        #.\packages\build\release.ps1
-      env:
-        PUSHTOKEN: ${{secrets.PUSHTOKEN}}
-        USER: ${{secrets.USER}}
-        NuGetApiKey: ${{secrets.NuGetApiKey}}
-    - name: Finish
-      run: Write-Output "Done"
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install
+        run: .\packages\build\install.ps1
+      - name: Build
+        run: .\packages\build\build.ps1
+        env:
+          USER: ${{secrets.USER}}
+          CODESIGN: ${{secrets.CODESIGN}}
+      - name: Test
+        run: .\packages\build\test.ps1
+      - name: Document
+        run: .\packages\build\document.ps1
+      - name: Commit to main & release
+        run: .\packages\build\commitandrelease.ps1
+        env:
+          USER: ${{secrets.USER}}
+          PUSHTOKEN: ${{secrets.PUSHTOKEN}}
+      - name: Publish
+        run: |
+          #.\packages\build\publish.ps1
+        env:
+          PUSHTOKEN: ${{secrets.PUSHTOKEN}}
+          USER: ${{secrets.USER}}
+          NuGetApiKey: ${{secrets.NuGetApiKey}}
+      - name: Finish
+        run: Write-Output "Done"

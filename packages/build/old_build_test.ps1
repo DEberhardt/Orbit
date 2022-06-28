@@ -3,7 +3,7 @@ $User = 'DEberhardt'
 $Copyright = "(c) 2020-$( (Get-Date).Year ) $Name. All rights reserved."
 
 # Build step
-Write-Verbose -Message "General: Copying Data" -Verbose
+Write-Verbose -Message 'General: Copying Data' -Verbose
 
 $RootDir = Get-Location
 Write-Output "Current location:      $($RootDir.Path)"
@@ -19,17 +19,14 @@ Copy-Item -Path * -Destination $ModuleDir -Exclude $Excludes -Recurse -Force
 
 Set-Location $ModuleDir
 
-# Defining Relative Location to packages\build where this file resides
-$LocationSRC = '.\src'
-$LocationDOC = '.\docs'
-
 # Defining Scope (Modules to process)
 Write-Verbose -Message 'General: Building Module Scope - Parsing Modules' -Verbose
-$OrbitDirs = Get-ChildItem -Path $LocationSRC -Directory | Sort-Object Name -Descending
+$OrbitDirs = Get-ChildItem -Path .\src -Directory | Sort-Object Name -Descending
 $OrbitModule = $OrbitDirs.Basename
+Write-Output "Defined Scope: $($OrbitModule -join ', ')"
 
 # Fetching current Version from Root Module
-$RootManifestPath = "$LocationSRC\Orbit\Orbit.psd1"
+$RootManifestPath = '.\src\Orbit\Orbit.psd1'
 $RootManifestTest = Test-ModuleManifest -Path $RootManifestPath
 
 # Setting Build Helpers Build Environment ENV:BH*
@@ -57,13 +54,13 @@ else {
 }
 Write-Output "New Version: $newVersion"
 
-Write-Verbose -Message "General: Updating Orbit.psm1 to reflect all nested Modules' Version" -Verbose
 
 # Resetting RequiredModules in Orbit Root to allow processing via Build script - This will be added later, before publishing
-$RequiredModulesValue   = @(
+Write-Verbose -Message "General: Updating Orbit.psm1 to reflect all nested Modules' Version" -Verbose
+$RequiredModulesValue = @(
   @{ModuleName = 'MicrosoftTeams'; ModuleVersion = '4.2.0'; }
-  )
-  Update-Metadata -Path $env:BHPSModuleManifest -PropertyName RequiredModules -Value $RequiredModulesValue
+)
+Update-Metadata -Path $env:BHPSModuleManifest -PropertyName RequiredModules -Value $RequiredModulesValue
 
 # Updating all Modules
 Write-Verbose -Message 'Build: Loop through all Modules' -Verbose
@@ -72,7 +69,7 @@ foreach ($Module in $OrbitModule) {
   try {
     Write-Verbose -Message "$Module`: Testing Manifest" -Verbose
     # This is where the module manifest lives
-    $ManifestPath = "$LocationSRC\$Module\$Module.psd1"
+    $ManifestPath = ".\src\$Module\$Module.psd1"
     $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
     # Setting Build Helpers Build Environment ENV:BH*
@@ -100,7 +97,7 @@ foreach ($Module in $OrbitModule) {
     Update-Metadata -Path $env:BHPSModuleManifest -PropertyName Copyright -Value $Copyright
     Update-Metadata -Path $env:BHPSModuleManifest -PropertyName ModuleVersion -Value $newVersion
 
-    Write-Output "Manifest re-tested incl. Version, Copyright, etc."
+    Write-Output 'Manifest re-tested incl. Version, Copyright, etc.'
     $ManifestTest = Test-ModuleManifest -Path $ManifestPath
     $ManifestTest
   }
@@ -115,16 +112,16 @@ foreach ($Module in $OrbitModule) {
   #region Documentation
   # Create new markdown and XML help files
   Write-Verbose -Message "$Module`: Creating MarkDownHelp" -Verbose
-  New-MarkdownHelp -Module $ManifestTest.Name -OutputFolder "$LocationDOC\" -Force -AlphabeticParamsOrder:$false
-  New-ExternalHelp -Path "$LocationDOC\$Module\" -OutputPath "$LocationDOC\$Module\" -Force
-  $HelpFiles = Get-ChildItem -Path $LocationDOC -Recurse
+  New-MarkdownHelp -Module $ManifestTest.Name -OutputFolder ".\docs\$Module\" -Force -AlphabeticParamsOrder:$false
+  New-ExternalHelp -Path ".\docs\$Module\" -OutputPath ".\docs\$Module\" -Force
+  $HelpFiles = Get-ChildItem -Path .\docs -Recurse
   Write-Output "Helpfiles created: $($HelpFiles.Count)"
 
   #endregion
 }
 
 #region Pester Testing
-Write-Verbose -Message "Pester Testing" -Verbose
+Write-Verbose -Message 'Pester Testing' -Verbose
 $PesterConfig = New-PesterConfiguration
 $Pesterconfig.Run.path = $ModuleDir
 $PesterConfig.Run.PassThru = $true
@@ -137,7 +134,7 @@ $PesterConfig.Output.CIFormat = 'GithubActions'
 $Script:TestResults = Invoke-Pester -Configuration $PesterConfig
 #$CoveragePercent = [math]::floor(100 - (($Script:TestResults.CodeCoverage.NumberOfCommandsMissed / $Script:TestResults.CodeCoverage.NumberOfCommandsAnalyzed) * 100))
 
-Write-Verbose -Message "Pester Testing - Updating ReadMe" -Verbose
+Write-Verbose -Message 'Pester Testing - Updating ReadMe' -Verbose
 Set-ShieldsIoBadge -Subject Result -Status $Script:TestResults.Result
 Set-ShieldsIoBadge -Subject Passed -Status $Script:TestResults.PassedCount -Color Blue
 Set-ShieldsIoBadge -Subject Failed -Status $Script:TestResults.FailedCount -Color Red
@@ -213,7 +210,7 @@ foreach ($Module in $OrbitModule) {
   try {
     # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
     $PM = @{
-      Path        = "$LocationSRC\$Module\$Module.psd1"
+      Path        = ".\src\$Module\$Module.psd1"
       NuGetApiKey = $env:NuGetApiKey
       ErrorAction = 'Stop'
       #Tags        = @('', '')

@@ -1,0 +1,25 @@
+﻿name: Integration
+on:
+  push:
+    branches-ignore:
+      - '*'
+
+jobs:
+  Integration:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install
+      run: |
+        Write-Output "Installing"
+        .\packages\build\install.ps1
+    - name: Build, Test, Lint Test
+      run: |
+        Write-Output "Testing Build Script"
+        .\packages\build\build_test.ps1
+    - name: Finish
+      run: Write-Output "Done"
