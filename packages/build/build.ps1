@@ -23,7 +23,7 @@ process {
 
   # Defining Scope (Modules to process)
   Write-Verbose -Message 'General: Building Module Scope - Parsing Modules' -Verbose
-  $global:OrbitDirs = Get-ChildItem -Path $LocationSRC -Directory | Sort-Object Name -Descending
+  $global:OrbitDirs = Get-ChildItem -Path .\src\ -Directory | Sort-Object Name -Descending
   $global:OrbitModule = $OrbitDirs.Basename
   Write-Output "Defined Scope: $($OrbitModule -join ', ')"
   #endregion
@@ -104,8 +104,9 @@ process {
     $ManifestTest
 
     #Importing Module
-    Write-Verbose -Message "$Module`: Importing Module" -Verbose
-    Import-Module $manifestTest.Path
+    Write-Verbose -Message "$($manifestTest.Name) Importing Module" -Verbose
+    Import-Module $ManifestPath
+
   }
 
 }
