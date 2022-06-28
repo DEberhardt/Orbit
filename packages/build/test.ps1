@@ -18,7 +18,7 @@ process {
   # Code Coverage currently disabled as output is not secure (no value in $TestResults.Coverage)
 
   $PesterConfig = New-PesterConfiguration
-  $Pesterconfig.Run.path = $ModuleDir
+  #$Pesterconfig.Run.path = $ModuleDir
   $PesterConfig.Run.PassThru = $true
   $PesterConfig.Run.Exit = $true
   $PesterConfig.Run.Throw = $true
