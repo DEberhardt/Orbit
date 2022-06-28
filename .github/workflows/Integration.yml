@@ -24,8 +24,9 @@ jobs:
         run: .\packages\build\test.ps1
       - name: Document
         run: .\packages\build\document.ps1
-      - name: Commit to main
-        run: .\packages\build\commit.ps1
+      - name: Commit
+        run: |
+          #.\packages\powershell\commit.ps1
         env:
           USER: ${{secrets.USER}}
           PUSHTOKEN: ${{secrets.PUSHTOKEN}}

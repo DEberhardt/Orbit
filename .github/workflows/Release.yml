@@ -25,7 +25,8 @@ jobs:
       - name: Document
         run: .\packages\build\document.ps1
       - name: Commit to main & release
-        run: .\packages\build\commitandrelease.ps1
+        run: |
+          #.\packages\build\commitandrelease.ps1
         env:
           USER: ${{secrets.USER}}
           PUSHTOKEN: ${{secrets.PUSHTOKEN}}
