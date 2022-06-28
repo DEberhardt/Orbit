@@ -126,13 +126,15 @@ foreach ($Module in $OrbitModule) {
 #region Pester Testing
 Write-Verbose -Message "Pester Testing" -Verbose
 $PesterConfig = New-PesterConfiguration
+$Pesterconfig.Run.path = $ModuleDir
 $PesterConfig.Run.PassThru = $true
 $PesterConfig.Run.Exit = $true
 $PesterConfig.Run.Throw = $true
 $PesterConfig.TestResult.Enabled = $true
+$PesterConfig.Output.CIFormat = 'GithubActions'
 #$PesterConfig.CodeCoverage.Enabled = $true
 
-$Script:TestResults = Invoke-Pester -Path $ModuleDir -Configuration $PesterConfig
+$Script:TestResults = Invoke-Pester -Configuration $PesterConfig
 #$CoveragePercent = [math]::floor(100 - (($Script:TestResults.CodeCoverage.NumberOfCommandsMissed / $Script:TestResults.CodeCoverage.NumberOfCommandsAnalyzed) * 100))
 
 Write-Verbose -Message "Pester Testing - Updating ReadMe" -Verbose
