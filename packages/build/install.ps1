@@ -23,7 +23,15 @@ process {
   ForEach ($Module in $PowerShellModules) {
     Write-Output "Installing $Module"
     If (!(Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue)) {
-      Install-Module $Module -Scope CurrentUser -Force -Repository PSGallery #-AllowClobber
+      $Splat = @{
+        'Name'         = $Module
+        'Scope'        = 'CurrentUser'
+        'Repository'   = 'PSGallery'
+        'Force'        = $true
+        'AllowClobber' = $true
+      }
+      if ( $Module -eq 'PlatyPS' ) { $Splat += @{ 'RequiredVersion' = '0.14.1' } }
+      Install-Module @Splat
     }
     If (!(Get-Module $Module -ErrorAction SilentlyContinue)) {
       Import-Module $Module -Force
