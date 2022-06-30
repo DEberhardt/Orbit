@@ -40,6 +40,10 @@
   }
 }
 process {
+  Write-Output 'Displaying ReadMe before changes are made to it'
+  $ReadMe = Get-Content $RootDir\ReadMe.md
+  $ReadMe
+
   # Updating Component Status
   Write-Verbose -Message 'Updating Component Status in ReadMe' -Verbose
 
@@ -47,19 +51,23 @@ process {
   Set-BuildEnvironment -Path $ModuleDir
 
   # Updating ShieldsIO badges
-  Set-ShieldsIoBadge # Default updates 'Build' to 'pass' or 'fail'
+  #Set-ShieldsIoBadge -Path $RootDir\ReadMe.md # Default updates 'Build' to 'pass' or 'fail'
 
-  $AllPublicFunctions = Get-ChildItem -LiteralPath $orbitDirs.FullName | Where-Object Name -EQ 'Public' | Get-ChildItem -Filter *.ps1
-  $AllPrivateFunctions = Get-ChildItem -LiteralPath $orbitDirs.FullName | Where-Object Name -EQ 'Private' | Get-ChildItem -Filter *.ps1
+  $AllPublicFunctions = Get-ChildItem -LiteralPath $global:orbitDirs.FullName | Where-Object Name -EQ 'Public' | Get-ChildItem -Filter *.ps1
+  $AllPrivateFunctions = Get-ChildItem -LiteralPath $global:orbitDirs.FullName | Where-Object Name -EQ 'Private' | Get-ChildItem -Filter *.ps1
   $Script:FunctionStatus = Get-Functionstatus -PublicPath $($AllPublicFunctions.FullName) -PrivatePath $($AllPrivateFunctions.FullName)
 
-  Set-ShieldsIoBadge -Subject Public -Status $Script:FunctionStatus.Public -Color Blue
-  Set-ShieldsIoBadge -Subject Private -Status $Script:FunctionStatus.Private -Color LightGrey
+  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Public -Status $Script:FunctionStatus.Public -Color Blue
+  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Private -Status $Script:FunctionStatus.Private -Color LightGrey
 
-  Set-ShieldsIoBadge -Subject Live -Status $Script:FunctionStatus.PublicLive -Color Blue
-  Set-ShieldsIoBadge -Subject RC -Status $Script:FunctionStatus.PublicRC -Color Green
-  Set-ShieldsIoBadge -Subject Beta -Status $Script:FunctionStatus.PublicBeta -Color Yellow
-  Set-ShieldsIoBadge -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Color Orange
+  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Live -Status $Script:FunctionStatus.PublicLive -Color Blue
+  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject RC -Status $Script:FunctionStatus.PublicRC -Color Green
+  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Beta -Status $Script:FunctionStatus.PublicBeta -Color Yellow
+  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Color Orange
+
+  Write-Output "Displaying ReadMe for validation"
+  $ReadMe = Get-Content $RootDir\ReadMe.md
+  $ReadMe
 
 
   # Create new markdown and XML help files

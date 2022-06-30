@@ -45,6 +45,7 @@ process {
 
   #Set-ShieldsIoBadge -Subject CodeCoverage -Status $Script:TestResults.Coverage -AsPercentage
 
+  Write-Output 'Displaying ReadMe for validation'
   $ReadMe = Get-Content $RootDir\ReadMe.md
   $ReadMe
 

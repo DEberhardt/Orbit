@@ -15,22 +15,22 @@ process {
 
   # Copy from Server
   Write-Verbose -Message 'Copying Module' -Verbose
-  $Excludes = @('.vscode', '*.git*', 'TODO.md', 'Archive', 'Incubator', 'packages', 'Workbench', 'PSScriptA*', 'Scrap*.*')
-  Copy-Item -Path * -Destination $ModuleDir -Exclude $Excludes -Recurse -Force
+  $Excludes = @('.vscode', '*.git*', '*.md', 'Archive', 'Incubator', 'packages', 'Workbench', 'PSScriptA*', 'Scrap*.*')
+  Copy-Item -Path .\src\* -Destination $ModuleDir -Exclude $Excludes -Recurse -Force
 
   #region Orbit specific
   Set-Location $ModuleDir
 
   # Defining Scope (Modules to process)
   Write-Verbose -Message 'General: Building Module Scope - Parsing Modules' -Verbose
-  $global:OrbitDirs = Get-ChildItem -Path .\src\ -Directory | Sort-Object Name -Descending
+  $global:OrbitDirs = Get-ChildItem -Path $ModuleDir -Directory | Sort-Object Name -Descending
   $global:OrbitModule = $OrbitDirs.Basename
   Write-Output "Defined Scope: $($OrbitModule -join ', ')"
   #endregion
 
   #region Define Root Module
   # Fetching current Version from Root Module
-  $ManifestPath = '.\src\Orbit\Orbit.psd1'
+  $ManifestPath = "$ModuleDir\Orbit\Orbit.psd1"
   $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
   # Setting Build Helpers Build Environment ENV:BH*
@@ -71,7 +71,7 @@ process {
   foreach ($Module in $OrbitModule) {
     Write-Verbose -Message "$Module`: Testing Manifest" -Verbose
     # This is where the module manifest lives
-    $ManifestPath = ".\src\$Module\$Module.psd1"
+    $ManifestPath = "$ModuleDir\$Module\$Module.psd1"
     $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
     # Setting Build Helpers Build Environment ENV:BH*
