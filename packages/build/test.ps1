@@ -14,10 +14,10 @@ process {
   Write-Verbose -Message 'Loading Modules' -Verbose
   Get-ChildItem $ModuleDir
   foreach ($Module in $OrbitModule) {
-    Write-Information "Importing $Module - $ModuleDir\$Module\$Module.psd1" -InformationAction Continue
-    Import-Module "$ModuleDir\$Module\$Module.psd1"
+    Write-Output "Importing $Module - $ModuleDir\$Module\$Module.psd1"
+    Import-Module "$ModuleDir\$Module\$Module.psd1" -Force
   }
-  Get-Module
+  Get-Module | Select-Object Name, Version, ModuleBase | Format-Table -AutoSize
 
   Write-Verbose -Message 'Pester Testing' -Verbose
   # Code Coverage currently disabled as output is not secure (no value in $TestResults.Coverage)
