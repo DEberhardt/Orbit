@@ -36,7 +36,7 @@ process {
   Write-Output $Script:FunctionStatus
 
   Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Public -Status $Script:FunctionStatus.Public -Color Blue
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Private -Status $Script:FunctionStatus.Private -Color LightGrey
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Private -Status $Script:FunctionStatus.Private -Color Grey
 
   Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Live -Status $Script:FunctionStatus.PublicLive -Color Blue
   Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject RC -Status $Script:FunctionStatus.PublicRC -Color Green

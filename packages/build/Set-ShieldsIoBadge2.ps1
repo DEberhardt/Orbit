@@ -49,10 +49,10 @@
   Process {
     if (-not $Color) {
       $Color = switch ($Status) {
-        { $_ -in 90..100 -or $_ -eq 'Pass' } { 'brightgreen' }
+        { $_ -in 90..100 -or $_ -eq 'Pass' -or $_ -eq 'Passed' } { 'brightgreen' }
         { $_ -in 75..89 } { 'yellow' }
         { $_ -in 60..74 } { 'orange' }
-        { $_ -in 0..59 -or $_ -eq 'Fail' } { 'red' }
+        { $_ -in 0..59 -or $_ -eq 'Fail' -or $_ -eq 'Failed' } { 'red' }
         default { 'lightgrey' }
       }
     }
