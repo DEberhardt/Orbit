@@ -18,7 +18,6 @@ jobs:
       - name: Build
         run: .\packages\build\build.ps1
         env:
-          USER: ${{secrets.USER}}
           CODESIGN: ${{secrets.CODESIGN}}
       - name: Test
         run: .\packages\build\test.ps1
@@ -35,7 +34,6 @@ jobs:
           #.\packages\build\publish.ps1
         env:
           PUSHTOKEN: ${{secrets.PUSHTOKEN}}
-          USER: ${{secrets.USER}}
           NuGetApiKey: ${{secrets.NuGetApiKey}}
       - name: Finish
         run: Write-Output "Done"

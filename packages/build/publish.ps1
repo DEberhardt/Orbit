@@ -8,7 +8,7 @@
   Write-Verbose "Module build location: $ModuleDir"
 
   Set-Location $ModuleDir
-  
+
 }
 process {
   # Checking Authenticode Signature for PSM1 File
@@ -31,8 +31,8 @@ process {
         NuGetApiKey = $env:NuGetApiKey
         ErrorAction = 'Stop'
         #Tags        = @('', '')
-        LicenseUri  = "https://github.com/$env:USER/Orbit/blob/master/LICENSE.md"
-        ProjectUri  = "https://github.com/$env:USER/Orbit"
+        LicenseUri  = "https://github.com/DEberhardt/Orbit/blob/master/LICENSE.md"
+        ProjectUri  = "https://github.com/DEberhardt/Orbit"
       }
 
       #Publish-Module @PM

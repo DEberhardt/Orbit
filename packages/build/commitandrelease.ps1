@@ -33,7 +33,7 @@ process {
   # Publish new GitHub Release with Tag "v$global:newVersion"
   try {
     Write-Verbose -Message 'Creating git tag for Version, Commit and Push' -Verbose
-    Publish-GithubRelease -AccessToken $env:PUSHTOKEN -RepositoryOwner $env:USER -TagName "v$global:newVersion"
+    Publish-GithubRelease -AccessToken $env:PUSHTOKEN -RepositoryOwner DEberhardt -TagName "v$global:newVersion"
     git tag "v$global:newVersion"
     git push --tags origin
     Write-Output "PowerShell Module version $global:newVersion published to GitHub."

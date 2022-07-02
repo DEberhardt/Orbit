@@ -18,7 +18,6 @@ jobs:
       - name: Build
         run: .\packages\build\build.ps1
         env:
-          USER: ${{secrets.USER}}
           CODESIGN: ${{secrets.CODESIGN}}
       - name: Test
         run: .\packages\build\test.ps1
@@ -28,7 +27,6 @@ jobs:
         run: |
           #.\packages\powershell\commit.ps1
         env:
-          USER: ${{secrets.USER}}
           PUSHTOKEN: ${{secrets.PUSHTOKEN}}
       - name: Finish
         run: Write-Output "Done"
