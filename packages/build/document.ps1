@@ -7,8 +7,8 @@
   $ModuleDir = "$RootDir\packages\module"
   Write-Verbose "Module build location: $ModuleDir"
 
-  . $RootDir\Set-ShieldsIoBadge2.ps1
-  . $RootDir\Get-FunctionStatus.ps1
+  . $PSScriptRoot\Set-ShieldsIoBadge2.ps1
+  . $PSScriptRoot\Get-FunctionStatus.ps1
 
   Set-Location $ModuleDir
   $global:OrbitDirs = Get-ChildItem -Path $ModuleDir -Directory | Sort-Object Name -Descending
