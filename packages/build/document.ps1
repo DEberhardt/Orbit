@@ -35,13 +35,13 @@ process {
   $Script:FunctionStatus = Get-Functionstatus -PublicPath $($AllPublicFunctions.FullName) -PrivatePath $($AllPrivateFunctions.FullName)
   Write-Output $Script:FunctionStatus
 
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Public -Status $Script:FunctionStatus.Public -Color Blue
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Private -Status $Script:FunctionStatus.Private -Color Grey
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Public -Status $Script:FunctionStatus.Public -Color blue
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Private -Status $Script:FunctionStatus.Private -Color grey
 
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Live -Status $Script:FunctionStatus.PublicLive -Color Blue
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject RC -Status $Script:FunctionStatus.PublicRC -Color Green
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Beta -Status $Script:FunctionStatus.PublicBeta -Color Yellow
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Alpha -Status $Script:FunctionStatus.PublicAlpha -Color Orange
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Live -Status $Script:FunctionStatus.PublicLive -Color blue
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject RC -Status $Script:FunctionStatus.PublicRC -Color green
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject BETA -Status $Script:FunctionStatus.PublicBeta -Color yellow
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject ALPHA -Status $Script:FunctionStatus.PublicAlpha -Color orange
 
   Write-Output "Displaying ReadMe for validation"
   $ReadMe = Get-Content $RootDir\ReadMe.md

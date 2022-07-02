@@ -42,9 +42,9 @@ process {
   Set-BuildEnvironment -Path $ModuleDir
 
   Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Result -Status $Script:TestResults.Result
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Passed -Status $Script:TestResults.PassedCount -Color Blue
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Failed -Status $Script:TestResults.FailedCount -Color Red
-  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Skipped -Status $Script:TestResults.SkippedCount -Color Yellow
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Passed -Status $Script:TestResults.PassedCount -Color blue
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Failed -Status $Script:TestResults.FailedCount -Color red
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Skipped -Status $Script:TestResults.SkippedCount -Color yellow
   Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject NotRun -Status $Script:TestResults.NotRunCount -Color darkgrey
 
   #Set-ShieldsIoBadge2 -Subject CodeCoverage -Status $Script:TestResults.Coverage -AsPercentage
