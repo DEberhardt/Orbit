@@ -8,7 +8,7 @@ begin {
 process {
 
   [string[]]$PackageProviders = @('NuGet', 'PowerShellGet')
-  [string[]]$PowerShellModules = @('Pester', 'posh-git', 'platyPS', 'InvokeBuild', 'BuildHelpers', 'MicrosoftTeams', 'AzureAd', 'AzureAdPreview')
+  [string[]]$PowerShellModules = @('Pester', 'posh-git', 'platyPS', 'InvokeBuild', 'BuildHelpers', 'MicrosoftTeams')
 
   # Install package providers for PowerShell Modules
   Write-Verbose -Message 'Installing Package Provider' -Verbose
