@@ -7,6 +7,8 @@
   $ModuleDir = "$RootDir\packages\module"
   Write-Verbose "Module build location: $ModuleDir"
 
+  . .\Set-ShieldsIoBadge2.ps1
+
   Set-Location $ModuleDir
   $global:OrbitDirs = Get-ChildItem -Path $ModuleDir -Directory | Sort-Object Name -Descending
   $global:OrbitModule = $OrbitDirs.Basename
@@ -39,13 +41,13 @@ process {
   Write-Verbose -Message 'Pester Testing - Updating ReadMe' -Verbose
   Set-BuildEnvironment -Path $ModuleDir
 
-  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Result -Status $Script:TestResults.Result
-  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Passed -Status $Script:TestResults.PassedCount -Color Blue
-  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Failed -Status $Script:TestResults.FailedCount -Color Red
-  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject SkippedCount -Status $Script:TestResults.SkippedCount -Color Yellow
-  Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject NotRunCount -Status $Script:TestResults.NotRunCount -Color darkgrey
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Result -Status $Script:TestResults.Result
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Passed -Status $Script:TestResults.PassedCount -Color Blue
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject Failed -Status $Script:TestResults.FailedCount -Color Red
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject SkippedCount -Status $Script:TestResults.SkippedCount -Color Yellow
+  Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject NotRunCount -Status $Script:TestResults.NotRunCount -Color darkgrey
 
-  #Set-ShieldsIoBadge -Subject CodeCoverage -Status $Script:TestResults.Coverage -AsPercentage
+  #Set-ShieldsIoBadge2 -Subject CodeCoverage -Status $Script:TestResults.Coverage -AsPercentage
 
   Write-Output 'Displaying ReadMe for validation'
   $ReadMe = Get-Content $RootDir\ReadMe.md
