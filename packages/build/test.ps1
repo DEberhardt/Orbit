@@ -16,10 +16,12 @@ process {
   $global:OrbitDirs = Get-ChildItem -Path $ModuleDir -Directory | Sort-Object Name -Descending
   $global:OrbitModule = $OrbitDirs.Basename
   foreach ($Module in $OrbitModule) {
-    Write-Output "Importing $Module - $ModuleDir\$Module\$Module.psd1"
-    Import-Module "$ModuleDir\$Module\$Module.psd1" -Force
+    #Write-Output "Importing $Module - $ModuleDir\$Module\$Module.psd1"
+    #Import-Module "$ModuleDir\$Module\$Module.psd1" -Force
+    Write-Output "Importing $Module - $ModuleDir\$Module\$Module.psm1"
+    Import-Module "$ModuleDir\$Module\$Module.psm1" -Force
   }
-  Get-Module | Select-Object Name, Version, ModuleBase | Format-Table -AutoSize
+  Get-Module | Select-Object Name, Version, ModuleType, ModuleBase | Format-Table -AutoSize
 
   Write-Verbose -Message 'Pester Testing' -Verbose
   # Code Coverage currently disabled as output is not secure (no value in $TestResults.Coverage)
