@@ -52,7 +52,9 @@ process {
   Write-Verbose -Message 'Creating MarkDownHelp with PlatyPs' -Verbose
   Import-Module PlatyPs
   foreach ($Module in $OrbitModule) {
-    $ModuleLoaded = Get-Module TeamsFunctions
+    Write-Output "Importing $Module - $ModuleDir\$Module\$Module.psd1"
+    Import-Module "$ModuleDir\$Module\$Module.psd1" -Force
+    $ModuleLoaded = Get-Module $Module
     if (-not $ModuleLoaded) { throw "Module '$Module' not found" }
     $DocsFolder = ".\docs\$Module\"
 
