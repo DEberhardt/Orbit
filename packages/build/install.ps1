@@ -23,18 +23,24 @@ process {
   ForEach ($Module in $PowerShellModules) {
     Write-Output "Installing $Module"
     If (!(Get-Module -ListAvailable $Module -ErrorAction SilentlyContinue)) {
-      $Splat = @{
+      $InstallSplat = @{
         'Name'         = $Module
         'Scope'        = 'CurrentUser'
         'Repository'   = 'PSGallery'
         'Force'        = $true
         'AllowClobber' = $true
       }
-      if ( $Module -eq 'PlatyPS' ) { $Splat += @{ 'RequiredVersion' = '0.14.1' } }
-      Install-Module @Splat
+      #if ( $Module -eq 'PlatyPS' ) { $InstallSplat += @{ 'RequiredVersion' = '0.14.1' } }
+      #if ( $Module -eq 'PlatyPS' ) { $InstallSplat += @{ 'AllowPrerelease' = $true } }
+      Install-Module @InstallSplat
     }
     If (!(Get-Module $Module -ErrorAction SilentlyContinue)) {
-      Import-Module $Module -Force
+      $ImportSplat = @{
+        'Name'  = $Module
+        'Force' = $true
+      }
+      #if ( $Module -eq 'AzureAdPreview' ) { $ImportSplat += @{ 'Cmdlet' = @('Open-AzureADMSPrivilegedRoleAssignmentRequest', 'Get-AzureADMSPrivilegedRoleAssignment') } }
+      Import-Module @ImportSplat
     }
   }
   Get-Module
