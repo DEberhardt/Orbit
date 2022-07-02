@@ -13,6 +13,8 @@
 process {
   Write-Verbose -Message 'Loading Modules' -Verbose
   Get-ChildItem $ModuleDir
+  $global:OrbitDirs = Get-ChildItem -Path $ModuleDir -Directory | Sort-Object Name -Descending
+  $global:OrbitModule = $OrbitDirs.Basename
   foreach ($Module in $OrbitModule) {
     Write-Output "Importing $Module - $ModuleDir\$Module\$Module.psd1"
     Import-Module "$ModuleDir\$Module\$Module.psd1" -Force
