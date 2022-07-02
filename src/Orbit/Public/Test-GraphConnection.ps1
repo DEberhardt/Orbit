@@ -1,7 +1,7 @@
 ﻿# Module:   TeamsFunctions
 # Function: Testing
 # Author:   David Eberhardt
-# Updated:  01-AUG-2020
+# Updated:  01-JUL-2022
 # Status:   Live
 
 
@@ -15,6 +15,7 @@ function Test-GraphConnection {
     A connection established via Connect-AzureAD is parsed.
   .EXAMPLE
     Test-GraphConnection
+
     Will Return $TRUE only if a session is found.
   .INPUTS
     None
@@ -61,4 +62,4 @@ function Test-GraphConnection {
     #Write-Verbose -Message "[END    ] $($MyInvocation.MyCommand)"
   } #end
 
-} #Test-AzureADConnection
+} #Test-GraphConnection

@@ -8,6 +8,8 @@
   Write-Verbose "Module build location: $ModuleDir"
 
   Set-Location $ModuleDir
+  $global:OrbitDirs = Get-ChildItem -Path $ModuleDir -Directory | Sort-Object Name -Descending
+  $global:OrbitModule = $OrbitDirs.Basename
 
   function Get-FunctionStatus {
     param (
@@ -52,10 +54,12 @@ process {
 
   # Updating ShieldsIO badges
   #Set-ShieldsIoBadge -Path $RootDir\ReadMe.md # Default updates 'Build' to 'pass' or 'fail'
-
   $AllPublicFunctions = Get-ChildItem -LiteralPath $global:orbitDirs.FullName | Where-Object Name -EQ 'Public' | Get-ChildItem -Filter *.ps1
   $AllPrivateFunctions = Get-ChildItem -LiteralPath $global:orbitDirs.FullName | Where-Object Name -EQ 'Private' | Get-ChildItem -Filter *.ps1
+  Write-Output "Counting AllPrivateFunctions $($AllPrivateFunctions.Count)"
+  Write-Output "Counting AllPrivateFunctions $($AllPrivateFunctions.Count)"
   $Script:FunctionStatus = Get-Functionstatus -PublicPath $($AllPublicFunctions.FullName) -PrivatePath $($AllPrivateFunctions.FullName)
+  Write-Output $Script:FunctionStatus
 
   Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Public -Status $Script:FunctionStatus.Public -Color Blue
   Set-ShieldsIoBadge -Path $RootDir\ReadMe.md -Subject Private -Status $Script:FunctionStatus.Private -Color LightGrey
