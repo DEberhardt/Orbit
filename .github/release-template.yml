@@ -1,5 +1,5 @@
-﻿name-template: "v${{ env.Version }} | v${{ env.Date }} 🌈"
-tag-template: "v${{ Version }}"
+﻿name-template: "v${{ needs.tag-new-versions.outputs.detectedVersion }} | v${{ steps.update_release_draft.outputs.date }} 🌈"
+tag-template: "v${{ needs.tag-new-versions.outputs.detectedVersion }}"
 categories:
   - title: "🚀 Features"
     labels:
@@ -31,7 +31,7 @@ template: |
 
   ### Link
 
-  https://www.powershellgallery.com/packages/Orbit/${{ env.Version }}
+  https://www.powershellgallery.com/packages/Orbit/${{ needs.tag-new-versions.outputs.detectedVersion }}
 
   ### Changed
 
