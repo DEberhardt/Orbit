@@ -23,12 +23,5 @@
     "url": "git://github.com/DEberhardt/Orbit/Orbit.git"
   },
   "main": "Orbit.psm1",
-  "version": {
-    "Major": 0,
-    "Minor": 0,
-    "Build": 1,
-    "Revision": -1,
-    "MajorRevision": -1,
-    "MinorRevision": -1
-  }
+  "version": "0.0.1"
 }
