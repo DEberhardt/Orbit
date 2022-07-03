@@ -73,7 +73,9 @@ process {
   # Workflow Changelog and Release Drafter are using Package.json file to read new version
   $PackageJSON = Get-Content "$RootDir\package.json" -Raw | ConvertFrom-Json
   $PackageJSON.Version = $ManifestTest.Version
+  Write-Output "Packgage.JSON updated to $($PackageJSON.Version)"
   $PackageJSON | ConvertTo-Json | Set-Content "$RootDir\package.json"
+  $PackageJSON
 
 }
 end {
