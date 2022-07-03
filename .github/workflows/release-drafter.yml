@@ -16,6 +16,10 @@ on:
 permissions:
   contents: read
 
+env:
+  currentdate: $null
+  currentversion: $null
+
 jobs:
   detect-new-versions:
     runs-on: ubuntu-latest
@@ -41,15 +45,11 @@ jobs:
     steps:
       - name: 'Get current date'
         id: date
-        run: |
-          echo "::set-output name=date::$(date +'%Y-%m-%d')"
-          echo "### Date: $date
+        run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d')"
 
       - name: 'Set current version'
         id: version
-        run: |
-          echo "::set-output name=version::${{ needs.detect-new-versions.outputs.detectedVersion }}"
-          echo "### Version: $version
+        run: echo "::set-output name=currentversion::${{ needs.detect-new-versions.outputs.detectedVersion }}"
 
       - name: 'Create or update Draft Release'
         uses: release-drafter/release-drafter@v5
