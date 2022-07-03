@@ -1,9 +1,8 @@
 ﻿name: Integration
 on:
   push:
-    branches-ignore:
-      - 'main'
-
+    branches:
+      - '*'
 jobs:
   Integration:
     runs-on: windows-latest
@@ -13,20 +12,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Install
         run: .\packages\build\install.ps1
+
       - name: Build
         run: .\packages\build\build.ps1
         env:
           CODESIGN: ${{secrets.CODESIGN}}
+
       - name: Test
         run: .\packages\build\test.ps1
+
       - name: Document
         run: .\packages\build\document.ps1
+
       - name: Commit
-        run: |
-          #.\packages\powershell\commit.ps1
-        env:
-          PUSHTOKEN: ${{secrets.PUSHTOKEN}}
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: ${{ github.head_ref || github.ref_name }}
+          commit_message: Update Documentation
+
       - name: Finish
         run: Write-Output "Done"
