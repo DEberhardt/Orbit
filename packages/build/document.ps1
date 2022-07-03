@@ -71,9 +71,9 @@ process {
   $ManifestTest = Test-ModuleManifest -Path $ManifestPath
 
   # Workflow Changelog and Release Drafter are using Package.json file to read new version
-  $PackageJSON = Get-Content "$RootDir\package.json"
+  $PackageJSON = Get-Content "$RootDir\package.json" -Raw | ConvertFrom-Json
   $PackageJSON.Version = $ManifestTest.Version
-  $PackageJSON | Set-Content "$RootDir\package.json"
+  $PackageJSON | ConvertTo-Json | Set-Content "$RootDir\package.json"
 
 }
 end {
