@@ -16,10 +16,6 @@ on:
 permissions:
   contents: read
 
-env:
-  currentdate: $(Get-Date -Format yyyy-MM-dd)
-  currentversion: $null
-
 jobs:
   detect-new-versions:
     runs-on: ubuntu-latest
@@ -47,10 +43,6 @@ jobs:
         id: date
         run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d')"
 
-      - name: 'Set current version'
-        id: version
-        run: echo "::set-output name=currentversion::${{ needs.detect-new-versions.outputs.detectedVersion }}"
-
       - name: 'Create or update Draft Release'
         uses: release-drafter/release-drafter@v5
         env:
@@ -58,7 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
-          name: "v${{ needs.detect-new-versions.outputs.detectedVersion }} | ${{ steps.update_release_draft.outputs.date }} 🌈"
-          tag-name: "v$version"
+          name: "v${{ needs.detect-new-versions.outputs.detectedVersion }} | ${{ steps.update_release_draft.date }} 🌈"
+          tag: "v$version"
           config-name: release-template.yml
           #disable-autolabeler: true
