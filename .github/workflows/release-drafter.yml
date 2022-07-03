@@ -50,6 +50,8 @@ jobs:
           config-name: release-template.yml
           #disable-autolabeler: true
         env:
-          detectedversion: ${{ needs.tag-new-versions.outputs.detectedVersion }}
-          currentdate: ${{ steps.update_release_draft.outputs.date }}
+          detectedversion: ${{ needs.tag-new-versions.outputs.current-version }}
+          #detectedversion: ${{ needs.tag-new-versions.outputs.detectedVersion }}
+          currentdate: ${{ steps.update_release_draft.date }}
+          #currentdate: ${{ steps.update_release_draft.outputs.date }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
