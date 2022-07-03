@@ -43,7 +43,7 @@ process {
   Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject BETA -Status $Script:FunctionStatus.PublicBeta -Color yellow
   Set-ShieldsIoBadge2 -Path $RootDir\ReadMe.md -Subject ALPHA -Status $Script:FunctionStatus.PublicAlpha -Color orange
 
-  Write-Output "Displaying ReadMe for validation"
+  Write-Output 'Displaying ReadMe for validation'
   $ReadMe = Get-Content $RootDir\ReadMe.md
   $ReadMe
 
@@ -72,7 +72,7 @@ process {
 
   # Workflow Changelog and Release Drafter are using Package.json file to read new version
   $PackageJSON = Get-Content "$RootDir\package.json" -Raw | ConvertFrom-Json
-  $PackageJSON.Version = $ManifestTest.Version
+  $PackageJSON.Version = $ManifestTest.Version.ToString()
   Write-Output "Packgage.JSON updated to $($PackageJSON.Version)"
   $PackageJSON | ConvertTo-Json | Set-Content "$RootDir\package.json"
   $PackageJSON
