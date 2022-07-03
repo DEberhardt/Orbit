@@ -46,11 +46,11 @@ jobs:
       - name: 'Create or update Draft Release'
         uses: release-drafter/release-drafter@v5
         env:
-          name: "v${{ needs.detect-new-versions.outputs.detectedVersion }} | ${{ steps.update_release_draft.outputs.date }} 🌈"
-          tag: "v${{ needs.detect-new-versions.outputs.detectedVersion }} "
-          link: "https://www.powershellgallery.com/packages/Orbit/${{ needs.detect-new-versions.outputs.detectedVersion }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          link: "https://www.powershellgallery.com/packages/Orbit/${{ needs.detect-new-versions.outputs.detectedVersion }}"
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
+          name: "v${{ needs.detect-new-versions.outputs.detectedVersion }} | ${{ steps.update_release_draft.outputs.date }} 🌈"
+          tag: "v${{ needs.detect-new-versions.outputs.detectedVersion }} "
           config-name: release-template.yml
           #disable-autolabeler: true
