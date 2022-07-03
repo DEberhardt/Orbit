@@ -1,5 +1,5 @@
-﻿name-template: "v$($env:detectedversion) | $($env:currentdate) 🌈"
-tag-template: "v$($env:detectedversion)"
+﻿name-template: "v$env:detectedversion | $env:currentdate 🌈"
+tag-template: "v$env:detectedversion"
 categories:
   - title: "🚀 Features"
     labels:
@@ -31,7 +31,7 @@ template: |
 
   ### Link
 
-  https://www.powershellgallery.com/packages/Orbit/$($env:detectedversion)
+  https://www.powershellgallery.com/packages/Orbit/$env:detectedversion
 
   ### Changed
 
