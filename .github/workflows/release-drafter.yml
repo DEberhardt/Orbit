@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 env:
-  currentdate: $null
+  currentdate: $(Get-Date -Format yyyy-MM-dd)
   currentversion: $null
 
 jobs:
