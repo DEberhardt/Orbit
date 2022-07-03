@@ -1,4 +1,4 @@
-﻿name-template: "v${{ Version }} | $RESOLVED_DATE 🌈"
+﻿name-template: "v${{ env.Version }} | v${{ env.Date }} 🌈"
 tag-template: "v${{ Version }}"
 categories:
   - title: "🚀 Features"
@@ -31,7 +31,7 @@ template: |
 
   ### Link
 
-  https://www.powershellgallery.com/packages/Orbit/${{ Version }}
+  https://www.powershellgallery.com/packages/Orbit/${{ env.Version }}
 
   ### Changed
 

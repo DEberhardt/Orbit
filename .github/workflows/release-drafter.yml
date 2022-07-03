@@ -20,7 +20,7 @@ jobs:
   tag-new-versions:
     runs-on: ubuntu-latest
     outputs:
-      detectedVersion: $ {{ steps.detect.outputs.current-version }}
+      detectedVersion: $ {{ current-version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -49,6 +49,7 @@ jobs:
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
           version: ${{ needs.tag-new-versions.outputs.detectedVersion }}
+          date: ${{ $(Get-Date -Format yyyy-MM-dd) }}
           config-name: release-template.yml
           #disable-autolabeler: true
         env:
