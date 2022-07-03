@@ -1,0 +1,27 @@
+﻿{
+    "name": "orbit",
+    "description": "The solution must reduce the administrative overhead.",
+    "homepage": "https://github.com/DEberhardt/Orbit",
+    "keywords": [
+        "Office365",
+        "M365",
+        "Graph",
+        "Teams",
+        "DirectRouting",
+        "Licensing",
+        "ResourceAccount",
+        "CallQueue",
+        "AutoAttendant",
+        "VoiceConfig",
+        "CommonAreaPhone"
+    ],
+    "author": "David Eberhardt <Orbit-Module@outlook.com>",
+    "contributors": [],
+    "dependencies": [],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/DEberhardt/Orbit/Orbit.git"
+    },
+    "main": "Orbit.psm1",
+    "version": "0.0.0.0"
+}

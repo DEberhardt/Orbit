@@ -1,8 +1,10 @@
 ﻿name: Integration
+
 on:
   push:
     branches:
       - '*'
+
 jobs:
   Integration:
     runs-on: windows-latest
@@ -25,6 +27,7 @@ jobs:
         run: .\packages\build\test.ps1
 
       - name: Document
+        if: ${{ github.head_ref || github.ref_name }} = 'main'
         run: .\packages\build\document.ps1
 
       - name: Commit

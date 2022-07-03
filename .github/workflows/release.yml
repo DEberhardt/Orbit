@@ -18,6 +18,21 @@ jobs:
           # Checkout target branch of this release. Ensures that the CHANGELOG is not out of date.
           ref: ${{ github.event.release.target_commitish }}
 
+      - name: Install
+        run: .\packages\build\install.ps1
+
+      - name: Build
+        run: .\packages\build\build.ps1
+        env:
+          CODESIGN: ${{secrets.CODESIGN}}
+
+      - name: Test
+        run: .\packages\build\test.ps1
+
+      - name: Publish Module
+        run: |
+          # .\packages\build\publish.ps1
+
       - name: Extract release date from git tag
         id: release_date
         run: |

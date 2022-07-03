@@ -63,6 +63,18 @@ process {
     $HelpFiles = Get-ChildItem -Path $DocsFolder -Recurse
     Write-Output "Helpfiles total: $($HelpFiles.Count)"
   }
+
+  # Updating version for Release Workflow
+  Write-Verbose -Message 'Updateing Package.json' -Verbose
+  # Fetching current Version from Root Module
+  $ManifestPath = "$ModuleDir\Orbit\Orbit.psd1"
+  $ManifestTest = Test-ModuleManifest -Path $ManifestPath
+
+  # Workflow Changelog and Release Drafter are using Package.json file to read new version
+  $PackageJSON = Get-Content "$RootDir\package.json"
+  $PackageJSON.Version = $ManifestTest.Version
+  $PackageJSON | Set-Content "$RootDir\package.json"
+
 }
 end {
   Set-Location $RootDir.Path

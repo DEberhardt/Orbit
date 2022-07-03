@@ -27,21 +27,22 @@ process {
     try {
       # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
       $PM = @{
-        Path        = "$LocationSRC\$Module\$Module.psd1"
+        Path        = "$ModuleDir\$Module\$Module.psd1"
         NuGetApiKey = $env:NuGetApiKey
         ErrorAction = 'Stop'
         #Tags        = @('', '')
         LicenseUri  = "https://github.com/DEberhardt/Orbit/blob/master/LICENSE.md"
         ProjectUri  = "https://github.com/DEberhardt/Orbit"
       }
+      # Fetching current Version from Module
+      $ManifestTest = Test-ModuleManifest -Path $PM.path
 
-      #Publish-Module @PM
-      Publish-Module @PM -WhatIf
-      #Write-Output "$Module PowerShell Module version $newVersion published to the PowerShell Gallery."
+      Publish-Module @PM
+      Write-Output "$Module PowerShell Module version $($ManifestTest.Version) published to the PowerShell Gallery."
     }
     catch {
       # Sad panda; it broke
-      Write-Warning "Publishing update $newVersion to the PowerShell Gallery failed."
+      Write-Warning "Publishing update $($TestManiManifestTestfest.Version) to the PowerShell Gallery failed."
       throw $_
     }
   }

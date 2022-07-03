@@ -1,5 +1,5 @@
-﻿name-template: "v$RESOLVED_VERSION 🌈"
-tag-template: "v$RESOLVED_VERSION"
+﻿name-template: "v${{ Version }} | $RESOLVED_DATE 🌈"
+tag-template: "v${{ Version }}"
 categories:
   - title: "🚀 Features"
     labels:
@@ -26,26 +26,33 @@ version-resolver:
       - "patch"
   default: patch
 template: |
-  ### Added
 
-  $(if ( $ADDED ) { $ADDED } else { 'None'})
+  Comment
 
-  ### Changes
+  ### Link
 
-  $(if ( $CHANGED ) { $CHANGED } else { 'None'})
+  https://www.powershellgallery.com/packages/Orbit/${{ Version }}
+
+  ### Changed
+
+  'None'
 
   ### Deprecated
 
-  $(if ( $DEPRECATED ) { $DEPRECATED } else { 'None'})
+  'None'
 
   ### Removed
 
-  $(if ( $REMOVED ) { $REMOVED } else { 'None'})
+  'None'
 
   ### Fixed
 
-  $(if ( $FIXED ) { $FIXED } else { 'None'})
+  'None'
 
   ### Security
 
-  $(if ( $SECURITY ) { $SECURITY } else { 'None'})
+  'None'
+
+  ### Changes
+
+  $CHANGES

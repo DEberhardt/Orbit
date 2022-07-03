@@ -17,7 +17,23 @@ permissions:
   contents: read
 
 jobs:
+  tag-new-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      detectedVersion: $ {{ steps.detect.outputs.current-version }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - uses: salsify/action-detect-and-tag-new-version@v2
+        id: 'detect'
+        with:
+          create-tag: 'false'
+          #version-command: |
+            #cat current-version.txt
+
   update_release_draft:
+    needs: 'tag-new-versions'
     permissions:
       contents: write  # for release-drafter/release-drafter to create a github release
       pull-requests: write  # for release-drafter/release-drafter to add label to PR
@@ -32,7 +48,8 @@ jobs:
       - uses: release-drafter/release-drafter@v5
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
+          version: ${{ detectedVersion }}
           config-name: release-template.yml
-          disable-autolabeler: true
+          #disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
