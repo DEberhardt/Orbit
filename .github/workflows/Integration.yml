@@ -29,6 +29,7 @@ jobs:
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{ github.head_ref || github.ref_name }} = 'main'
         with:
           branch: ${{ github.head_ref || github.ref_name }}
           commit_message: Update Documentation
