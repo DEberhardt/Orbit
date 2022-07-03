@@ -41,16 +41,16 @@ jobs:
     steps:
       - name: 'Get current date'
         id: date
-        run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d')"
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
       - name: 'Create or update Draft Release'
         uses: release-drafter/release-drafter@v5
         env:
+          name: "v${{ needs.detect-new-versions.outputs.detectedVersion }} | ${{ steps.update_release_draft.outputs.date }} 🌈"
+          tag: "v${{ needs.detect-new-versions.outputs.detectedVersion }} "
           link: "https://www.powershellgallery.com/packages/Orbit/${{ needs.detect-new-versions.outputs.detectedVersion }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
-          name: "v${{ needs.detect-new-versions.outputs.detectedVersion }} | ${{ steps.update_release_draft.date }} 🌈"
-          tag: "v$version"
           config-name: release-template.yml
           #disable-autolabeler: true
