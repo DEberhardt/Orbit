@@ -47,9 +47,9 @@ jobs:
         uses: release-drafter/release-drafter@v5
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
-          version: ${{ needs.tag-new-versions.outputs.detectedVersion }}
-          date: ${{ steps.update_release_draft.outputs.date }}
           config-name: release-template.yml
           #disable-autolabeler: true
         env:
+          version: ${{ needs.tag-new-versions.outputs.detectedVersion }}
+          date: ${{ steps.update_release_draft.outputs.date }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
