@@ -1,5 +1,5 @@
-﻿name-template: "v$detectedversion | $currentdate 🌈"
-tag-template: "v$detectedversion"
+﻿name-template: "v$RESOLVED_VERSION🌈"
+tag-template: "v$RESOLVED_VERSION"
 categories:
   - title: "🚀 Features"
     labels:
@@ -31,11 +31,12 @@ template: |
 
   ### Link
 
-  https://www.powershellgallery.com/packages/Orbit/$detectedversion
+  $Link
 
   ### Changed
 
   'None'
+  $env:Link
 
   ### Deprecated
 

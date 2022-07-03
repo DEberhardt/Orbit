@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  tag-new-versions:
+  detect-new-versions:
     runs-on: ubuntu-latest
     outputs:
       detectedVersion: $ {{ steps.detect.outputs.current-version }}
@@ -33,7 +33,7 @@ jobs:
             #cat current-version.txt
 
   update_release_draft:
-    needs: 'tag-new-versions'
+    needs: 'detect-new-versions'
     permissions:
       contents: write  # for release-drafter/release-drafter to create a github release
       pull-requests: write  # for release-drafter/release-drafter to add label to PR
@@ -41,17 +41,24 @@ jobs:
     steps:
       - name: 'Get current date'
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: |
+          echo "::set-output name=date::$(date +'%Y-%m-%d')"
+          echo "### Date: $date
+
+      - name: 'Set current version'
+        id: version
+        run: |
+          echo "::set-output name=version::${{ needs.detect-new-versions.outputs.detectedVersion }}"
+          echo "### Version: $version
 
       - name: 'Create or update Draft Release'
         uses: release-drafter/release-drafter@v5
         env:
-          #detectedversion: ${{ needs.tag-new-versions.outputs.current-version }}
-          #currentdate: ${{ steps.update_release_draft.date }}
-          detectedversion: ${{ needs.tag-new-versions.outputs.detectedVersion }}
-          currentdate: ${{ steps.update_release_draft.outputs.date }}
+          link: "https://www.powershellgallery.com/packages/Orbit/${{ needs.detect-new-versions.outputs.detectedVersion }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
+          name: "v${{ needs.detect-new-versions.outputs.detectedVersion }} | ${{ steps.update_release_draft.outputs.date }} 🌈"
+          tag-name: "v$version"
           config-name: release-template.yml
           #disable-autolabeler: true
