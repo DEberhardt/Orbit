@@ -157,6 +157,7 @@ function Get-AzureAdAdminRole {
             # Querying Display Name
             $RoleObject = $AllRoles | Where-Object { $_.Id -eq $R.RoleDefinitionId }
             $Role = [PsCustomObject][ordered]@{
+              PSTypeName         = 'PowerShell.Orbit.AzureAdAdminRole.RoleActivationAssignment'
               'User'             = $AzureAdUser.UserPrincipalName
               'Rolename'         = $RoleObject.DisplayName
               'Type'             = $R.MemberType
@@ -168,6 +169,7 @@ function Get-AzureAdAdminRole {
           }
           'Group' {
             $Role = [PsCustomObject][ordered]@{
+              PSTypeName         = 'PowerShell.Orbit.AzureAdAdminRole.RoleActivationAssignment'
               'User'             = $AzureAdUser.UserPrincipalName
               'Rolename'         = $R.DisplayName
               'Type'             = 'Direct' # This may be different once we incorporate Groups too!

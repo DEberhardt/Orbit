@@ -314,6 +314,7 @@ function Enable-AzureAdAdminRole {
             # Preparing Output object
             $ActivatedRole = @()
             $ActivatedRole = [PsCustomObject][ordered]@{
+              PSTypeName    = 'PowerShell.Orbit.AzureAdAdminRole.RoleActivation'
               'User'        = $Id
               'Rolename'    = $RoleName
               'Type'        = $null

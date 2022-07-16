@@ -247,6 +247,7 @@ function Disable-AzureAdAdminRole {
             # Preparing Output object
             $DeactivatedRole = @()
             $DeactivatedRole = [PsCustomObject][ordered]@{
+              PSTypeName    = 'PowerShell.Orbit.AzureAdAdminRole.RoleActivation'
               'User'        = $Id
               'Rolename'    = $RoleName
               'Type'        = $null
