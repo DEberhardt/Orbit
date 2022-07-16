@@ -214,7 +214,7 @@ function Disable-AzureAdAdminRole {
       $MyEligibleRoles = $MyRoles | Where-Object AssignmentState -EQ 'Eligible'
       Write-Verbose -Message "User '$Id' has currently $($MyActiveRoles.Count) of $($MyEligibleRoles.Count) activated"
 
-      [System.Collections.ArrayList]$RolesAndGroups = @()
+      [System.Collections.Generic.List[object]]$RolesAndGroups = @()
       <# Commented out for Admin Groups are not yet available via PowerShell
       if ($MyEligibleGroups.Count -eq 0) {
         Write-Verbose -Message "User '$Id' - No Privileged Access Groups are available that can be activated."
@@ -231,7 +231,7 @@ function Disable-AzureAdAdminRole {
       }
 
       # DeActivating Role
-      [System.Collections.ArrayList]$DeactivatedRoles = @()
+      [System.Collections.Generic.List[object]]$DeactivatedRoles = @()
 
       foreach ($R in $RolesAndGroups) {
         # Querying Role Display Name

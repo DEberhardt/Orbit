@@ -262,7 +262,7 @@ function Enable-AzureAdAdminRole {
       Write-Verbose -Message "User '$Id' is a member of $($MyGroups.Count) Groups with $($MyGroupRoles.Count) assigned roles"
       #>
 
-      [System.Collections.ArrayList]$Roles = @()
+      [System.Collections.Generic.List[object]]$Roles = @()
       # Adding Direct assigned Roles
       if ($MyEligibleRoles.Count -gt 0) { foreach ($Role in $MyEligibleRoles) { [void]$Roles.Add($Role) } }
       # Adding Group assigned Roles
@@ -300,7 +300,7 @@ function Enable-AzureAdAdminRole {
       }
 
       # Activating Role
-      [System.Collections.ArrayList]$ActivatedRoles = @()
+      [System.Collections.Generic.List[object]]$ActivatedRoles = @()
       foreach ($R in $Roles) {
         # Querying Role Display Name
         $RoleName = $AllRoles | Where-Object { $_.Id -eq $R.RoleDefinitionId } | Select-Object -ExpandProperty DisplayName

@@ -149,7 +149,7 @@ function Get-AzureAdAdminRole {
         "Function: $($MyInvocation.MyCommand.Name) - MyAdminRoles ($Scope)", ( $MyAdminRoles | Format-List | Out-String).Trim() | Write-Debug
       }
 
-      [System.Collections.ArrayList]$MyRoles = @()
+      [System.Collections.Generic.List[object]]$MyRoles = @()
       foreach ($R in $MyAdminRoles) {
         $Role = @()
         switch ($Scope) {
