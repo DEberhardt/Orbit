@@ -74,13 +74,16 @@ function Test-AzureAdGroup {
     $CallTarget = $null
     $CallTarget = Get-AzureADGroup -SearchString "$Identity" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
     $CallTarget = $CallTarget | Where-Object Displayname -EQ "$Id"
-    if (-not $CallTarget ) {
+    if ( -not $CallTarget ) {
       try {
         $CallTarget = Get-AzureADGroup -ObjectId "$Identity" -WarningAction SilentlyContinue -ErrorAction Stop
       }
       catch {
-        if ($Identity -match '@') {
+        if ( $Identity -match '@' ) {
           $CallTarget = $global:TeamsFunctionsTenantAzureAdGroups | Where-Object Mail -EQ "$Identity" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+        }
+        elseif ( $Identity -match $script:TFMatchGuid ) {
+          $CallTarget = $global:TeamsFunctionsTenantAzureAdGroups | Where-Object ObjectId -EQ "$Identity" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         }
         else {
           $CallTarget = $global:TeamsFunctionsTenantAzureAdGroups | Where-Object DisplayName -EQ "$Identity" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
