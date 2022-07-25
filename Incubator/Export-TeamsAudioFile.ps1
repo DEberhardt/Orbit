@@ -94,7 +94,7 @@ function Import-TeamsAudioFile {
       $Parameters += @{ 'ErrorAction' = 'STOP' }
 
       if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
-        "  Function: $($MyInvocation.MyCommand.Name) - Parameters:", ($Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
+        "  Function: $($MyInvocation.MyCommand.Name) - Parameters (Import-CsOnlineAudioFile)", ($Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
       }
       $AudioFile = Import-CsOnlineAudioFile @Parameters
       Write-Output $AudioFile

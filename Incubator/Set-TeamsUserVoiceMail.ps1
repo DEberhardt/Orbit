@@ -193,7 +193,7 @@ function Set-TeamsUserVoiceMail {
         'ErrorAction'      = 'Stop'
       }
       if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
-        "Function: $($MyInvocation.MyCommand.Name): CsOnlineVoicemailUserSettings:", ($CsOnlineVoicemailUserSettings | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
+        "Function: $($MyInvocation.MyCommand.Name) - Parameters (Set-CsOnlineVoicemailUserSettings)", ($CsOnlineVoicemailUserSettings | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
       }
       if ($Force -or $PSCmdlet.ShouldProcess("$($CsUser.DisplayName)", 'Set-CsOnlineVoicemailUserSettings')) {
         try {

@@ -283,7 +283,7 @@ function Disable-AzureAdAdminRole {
               Write-Verbose -Message "User '$Id' - '$RoleName' - Deactivating Role"
               $DeactivatedRole.ActiveUntil = $schedule.endDateTime
               if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
-                "Function: $($MyInvocation.MyCommand.Name) - Parameters for Open-AzureADMSPrivilegedRoleAssignmentRequest", ( $Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
+                "Function: $($MyInvocation.MyCommand.Name) - Parameters (Open-AzureADMSPrivilegedRoleAssignmentRequest)", ( $Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
               }
               $null = Open-AzureADMSPrivilegedRoleAssignmentRequest @Parameters
               [void]$DeactivatedRoles.Add($DeactivatedRole)

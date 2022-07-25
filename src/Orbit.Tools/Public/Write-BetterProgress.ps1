@@ -179,7 +179,7 @@ function Write-BetterProgress {
     catch {
       Write-Debug '  Progress: Catching PercentComplete Error by increasing highest step by 1. Check code'
       if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
-        "Function: $($MyInvocation.MyCommand.Name) - WriteProgressParams", ( $WriteProgressParams | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
+        "Function: $($MyInvocation.MyCommand.Name) - Parameters (WriteProgress)", ( $WriteProgressParams | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
       }
       $Of++
       $WriteProgressParams.PercentComplete = (($($Step - 1) / $Of) * 100)

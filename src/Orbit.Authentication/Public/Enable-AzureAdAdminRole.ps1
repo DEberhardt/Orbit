@@ -359,7 +359,7 @@ function Enable-AzureAdAdminRole {
               Write-Verbose -Message "User '$Id' Role '$RoleName': Activating Role"
               $ActivatedRole.ActiveUntil = $schedule.endDateTime
               if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
-                "Function: $($MyInvocation.MyCommand.Name) - Parameters for Open-AzureADMSPrivilegedRoleAssignmentRequest", ( $Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
+                "Function: $($MyInvocation.MyCommand.Name) - Parameters (Open-AzureADMSPrivilegedRoleAssignmentRequest)", ( $Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
               }
               $null = Open-AzureADMSPrivilegedRoleAssignmentRequest @Parameters
               [void]$ActivatedRoles.Add($ActivatedRole)
